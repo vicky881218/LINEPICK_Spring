@@ -131,7 +131,7 @@ public class LineBotController {
                 break;
             }
 
-            case "Flex": {
+            case "flex": {
                 this.reply(replyToken, new testFlexMessage().get());
                 break;
             }
