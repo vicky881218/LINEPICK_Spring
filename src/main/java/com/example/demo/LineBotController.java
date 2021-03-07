@@ -117,7 +117,7 @@ public class LineBotController {
             }
 
             case "hello" :{//限定回覆字
-                this.replyText(replyToken, "hihihi");
+                this.replyText(replyToken, "hihihi!");
                 break;
             }
 
