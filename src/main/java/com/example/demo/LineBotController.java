@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.BuyerDAO;
 import com.example.demo.flex.*;
 
 import com.linecorp.bot.client.LineMessagingClient;
@@ -28,6 +29,9 @@ public class LineBotController {
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
+    @Autowired
+    private BuyerDAO buyerDAO;
+    
 
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -92,7 +96,8 @@ public class LineBotController {
 
                         this.reply(replyToken,
                                 Arrays.asList(new TextMessage("Display name: " + profile.getDisplayName()),
-                                        new TextMessage("Status message: " + profile.getStatusMessage())));
+                                        new TextMessage("Status message: " + profile.getStatusMessage()),
+                                        new TextMessage("userId: " + userId)));
 
                     });
                 }
@@ -132,7 +137,8 @@ public class LineBotController {
             }
 
             case "flex": {
-                this.reply(replyToken, new testFlexMessage().get());
+                
+                this.reply(replyToken, new testFlexMessage(buyerDAO).get());
                 break;
             }
             default:

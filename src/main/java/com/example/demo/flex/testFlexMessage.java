@@ -3,7 +3,10 @@ package com.example.demo.flex;
 import static java.util.Arrays.asList;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.function.Supplier;
+
+import java.util.List;
 
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.URIAction;
@@ -26,9 +29,38 @@ import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
+import com.example.demo.dao.BuyerDAO;
+import com.example.demo.entity.Buyer;
+
 public class testFlexMessage implements Supplier<FlexMessage> {
+ 
+    private BuyerDAO buyerDAO;
+
+
+    public testFlexMessage(BuyerDAO buyerDAO) {
+        this.buyerDAO = buyerDAO;
+
+    }
+
+    public List<Buyer> retrieveBuyers() throws SQLException{
+        return buyerDAO.findAll();
+     }
+
+     public Buyer retrieveOneBuyer(String buyer_id) throws SQLException{
+        buyer_id = "U03f0c8f23e837621589cd133fad12490";
+        // List <Buyer> allBuyers = buyerDAO.findAll();
+        // System.out.println(allBuyers.size());
+        // System.out.println(buyerDAO.findOne(buyer_id));
+        return buyerDAO.findOne(buyer_id);  
+     }
+
+
     @Override
     public FlexMessage get() {
+        
+        // System.out.println("here");
+        // System.out.println(buyerDAO.findOne(buyer_id));
+
         final Image heroBlock =
                 Image.builder()
                      .url(URI.create("https://example.com/cafe.jpg"))
@@ -39,7 +71,7 @@ public class testFlexMessage implements Supplier<FlexMessage> {
                      .build();
 
         final Box bodyBlock = createBodyBlock();
-        final Box footerBlock = createFooterBlock();
+        final Box footerBlock = createFooterBlock("U03f0c8f23e837621589cd133fad12490");
         final Bubble bubble =
                 Bubble.builder()
                       .hero(heroBlock)
@@ -50,13 +82,20 @@ public class testFlexMessage implements Supplier<FlexMessage> {
         return new FlexMessage("ALT", bubble);
     }
 
-    private Box createFooterBlock() {
+    private Box createFooterBlock(String buyer_id) {
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
+        Buyer buyer = new Buyer();
+        try {
+            buyer = retrieveOneBuyer(buyer_id);
+        }
+        catch (Exception e){
+            System.out.println("Error:"+e);
+        }
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("CALL", "hi"))
+                .action(new MessageAction("CALL", buyer.getBuyerName() ))
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
@@ -161,4 +200,5 @@ public class testFlexMessage implements Supplier<FlexMessage> {
                   .contents(asList(goldStar, goldStar, goldStar, goldStar, grayStar, point))
                   .build();
     }
+
 }
