@@ -163,7 +163,7 @@ public class LineBotController {
             this.replyText(replyToken, text);
             break;
 
-        }
+        } 
 
     }
 }
