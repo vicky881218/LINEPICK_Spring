@@ -35,19 +35,22 @@ import com.example.demo.entity.Buyer;
 public class testFlexMessage implements Supplier<FlexMessage> {
  
     private BuyerDAO buyerDAO;
+    private Buyer buyer;
+    private String buyer_id;
 
-
-    public testFlexMessage(BuyerDAO buyerDAO) {
+    public testFlexMessage(BuyerDAO buyerDAO, String buyer_id) {
         this.buyerDAO = buyerDAO;
-
+        this.buyer_id = buyer_id;
     }
 
     public List<Buyer> retrieveBuyers() throws SQLException{
         return buyerDAO.findAll();
      }
 
-     public Buyer retrieveOneBuyer(String buyer_id) throws SQLException{
-        buyer_id = "U03f0c8f23e837621589cd133fad12490";
+     public Buyer retrieveOneBuyer() throws SQLException{
+        System.out.println("!!!!!!!!!!!!!!!!!");
+        System.out.println(buyer_id);
+        //buyer_id = "U03f0c8f23e837621589cd133fad12490";
         // List <Buyer> allBuyers = buyerDAO.findAll();
         // System.out.println(allBuyers.size());
         // System.out.println(buyerDAO.findOne(buyer_id));
@@ -56,7 +59,7 @@ public class testFlexMessage implements Supplier<FlexMessage> {
 
 
     @Override
-    public FlexMessage get() {
+    public FlexMessage get(){
         
         // System.out.println("here");
         // System.out.println(buyerDAO.findOne(buyer_id));
@@ -71,31 +74,32 @@ public class testFlexMessage implements Supplier<FlexMessage> {
                      .build();
 
         final Box bodyBlock = createBodyBlock();
-        final Box footerBlock = createFooterBlock("U03f0c8f23e837621589cd133fad12490");
+        final Box footerBlock = createFooterBlock();
         final Bubble bubble =
                 Bubble.builder()
                       .hero(heroBlock)
                       .body(bodyBlock)
                       .footer(footerBlock)
                       .build();
+        
 
         return new FlexMessage("ALT", bubble);
     }
 
-    private Box createFooterBlock(String buyer_id) {
+    private Box createFooterBlock(){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
         Buyer buyer = new Buyer();
         try {
-            buyer = retrieveOneBuyer(buyer_id);
+            buyer = retrieveOneBuyer();
         }
-        catch (Exception e){
-            System.out.println("Error:"+e);
+        catch (SQLException e){
+            System.out.println(e);
         }
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("CALL", buyer.getBuyerName() ))
+                .action(new MessageAction("CALL", buyer.getBuyerName()))
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =

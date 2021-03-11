@@ -2,7 +2,7 @@ package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
 import com.example.demo.flex.*;
-
+import com.example.demo.replyTextMessage.BuyerInformation;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
@@ -16,9 +16,10 @@ import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,6 @@ public class LineBotController {
     private LineMessagingClient lineMessagingClient;
     @Autowired
     private BuyerDAO buyerDAO;
-    
 
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -50,8 +50,8 @@ public class LineBotController {
         reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
     }
 
-    private void replySticker(String replyToken,String packageId,String stickerId) {
-        this.reply(replyToken, new StickerMessage(packageId,stickerId));
+    private void replySticker(String replyToken, String packageId, String stickerId) {
+        this.reply(replyToken, new StickerMessage(packageId, stickerId));
     }
 
     @EventMapping
@@ -85,65 +85,83 @@ public class LineBotController {
         String text = content.getText();
 
         switch (text) {
-            case "profile": { // 名字+個簽
-                String userId = event.getSource().getUserId();
-                if (userId != null) {
-                    lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
-                        if (throwable != null) {
-                            this.replyText(replyToken, throwable.getMessage());
-                            return;
-                        }
+        case "profile": { // 名字+個簽
+            String buyer_id = event.getSource().getUserId();
+            if (buyer_id != null) {
+                lineMessagingClient.getProfile(buyer_id).whenComplete((profile, throwable) -> {
+                    if (throwable != null) {
+                        this.replyText(replyToken, throwable.getMessage());
+                        return;
+                    }
 
-                        this.reply(replyToken,
-                                Arrays.asList(new TextMessage("Display name: " + profile.getDisplayName()),
-                                        new TextMessage("Status message: " + profile.getStatusMessage()),
-                                        new TextMessage("userId: " + userId)));
+                    this.reply(replyToken,
+                            Arrays.asList(new TextMessage("Display name: " + profile.getDisplayName()),
+                                    new TextMessage("Status message: " + profile.getStatusMessage()),
+                                    new TextMessage("userId: " + buyer_id)));
 
-                    });
-                }
-                break;
+                });
             }
+            break;
+        }
 
-            case "hi": { // 名字+歡迎光臨
-                String userId = event.getSource().getUserId();
-                if (userId != null) {
-                    lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
-                        if (throwable != null) {
-                            this.replyText(replyToken, throwable.getMessage());
-                            return;
-                        }
+        case "hi": { // 名字+歡迎光臨
+            String userId = event.getSource().getUserId();
+            if (userId != null) {
+                lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
+                    if (throwable != null) {
+                        this.replyText(replyToken, throwable.getMessage());
+                        return;
+                    }
 
-                        this.reply(replyToken,
-                                Arrays.asList(new TextMessage(profile.getDisplayName()+"歡迎光臨")));
+                    this.reply(replyToken, Arrays.asList(new TextMessage(profile.getDisplayName() + "歡迎光臨")));
 
-                    });
-                }
-                break;
+                });
             }
+            break;
+        }
 
-            case "hello" :{//限定回覆字
-                this.replyText(replyToken, "hihihi!");
-                break;
-            }
+        case "hello": {// 限定回覆字
+            this.replyText(replyToken, "hihihi!");
+            break;
+        }
 
-            case "sticker" :{//貼圖
-                this.replySticker(replyToken,"11539","52114116");
-                break;
-            }
+        case "sticker": {// 貼圖
+            this.replySticker(replyToken, "11539", "52114116");
+            break;
+        }
 
-            case "quickreply" :{//貼圖
-                this.reply(replyToken, new QuickReplyMessage().get());
-                break;
-            }
+        case "quickreply": {
+            this.reply(replyToken, new QuickReplyMessage().get());
+            break;
+        }
 
-            case "flex": {
-                
-                this.reply(replyToken, new testFlexMessage(buyerDAO).get());
-                break;
+        case "flex": {
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new testFlexMessage(buyerDAO,buyer_id).get());
+            break;
+        }
+        case "我": {
+            String buyer_id = event.getSource().getUserId();
+            
+            try {
+                BuyerInformation buyer = new BuyerInformation(buyerDAO,text,buyer_id);
+                this.reply(replyToken,buyer.get());
             }
-            default:
-                this.replyText(replyToken, text);
-                break;
+            catch (DuplicateKeyException e){
+                System.out.println("exists");
+            }
+            catch (SQLException e){
+                System.out.println(e);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+            
+            break;
+        }
+        default:
+            this.replyText(replyToken, text);
+            break;
 
         }
 

@@ -1,13 +1,13 @@
 package com.example.demo.entity;
 
 public class Buyer {
-    private String buyer_id;
-    private String buyer_name;
-    private String buyer_phone;
-    private String buyer_mail;
-    private String buyer_address;
-    private int pickpoint;
-    private int pickmoney;
+    private String buyer_id = "";
+    private String buyer_name = "";
+    private String buyer_phone = "";
+    private String buyer_mail = "";
+    private String buyer_address = "";
+    private int pickpoint = 0;
+    private int pickmoney = 0;
 
     public String getBuyerId(){
         return buyer_id;

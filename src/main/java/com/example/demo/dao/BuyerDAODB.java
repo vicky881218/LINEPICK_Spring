@@ -40,12 +40,9 @@ public JdbcTemplate getJdbcTemplate() {
    catch (Exception e){
      System.out.println("Error in findOne:"+e);
    }
-  System.out.println("in findOne--");
    Buyer aBuyer = jdbcTemplate.queryForObject( 
-    "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer where buyer_id = 'U03f0c8f23e837621589cd133fad12490'", 
-    new BuyerMapper());
-    System.out.println("in findOne"+aBuyer.getBuyerName()); 
-    System.out.println("in findOne"+aBuyer.getBuyerName());
+    "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer where buyer_id = ?", 
+    new BuyerMapper(), buyer_id);
   return aBuyer;
     /*
      return this.jdbcTemplate.queryForObject( 
@@ -73,7 +70,7 @@ public JdbcTemplate getJdbcTemplate() {
      }
  }
 
- public int insert(Buyer Buyer) {
+ public int insert(Buyer Buyer) throws SQLException{
   return jdbcTemplate.update(
     "insert into Buyer (buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney) values(?,?,?,?,?,?,?)",
     Buyer.getBuyerId(),Buyer.getBuyerName(), Buyer.getBuyerPhone(),Buyer.getBuyerMail(),
