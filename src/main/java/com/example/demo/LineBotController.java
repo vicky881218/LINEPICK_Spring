@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
+import com.example.demo.dao.ProductDAO;
 import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
 import com.linecorp.bot.client.LineMessagingClient;
@@ -32,6 +33,8 @@ public class LineBotController {
     private LineMessagingClient lineMessagingClient;
     @Autowired
     private BuyerDAO buyerDAO;
+    @Autowired
+    private ProductDAO productDAO;
 
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -140,6 +143,42 @@ public class LineBotController {
             this.reply(replyToken, new testFlexMessage(buyerDAO,buyer_id).get());
             break;
         }
+
+        case "衣服flex": {
+            this.reply(replyToken, new ProductFlexMessage(productDAO).get());
+            break;
+        }
+
+        case "顏色flex": {
+            //String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new ColorFlexMessage().get());
+            break;
+        }
+
+        case "sizeflex": {
+            //String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new SizeFlexMessage().get());
+            break;
+        }
+        
+        case "pickmoneyflex": {
+            //String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new PickmoneyFlexMessage().get());
+            break;
+        }
+
+        case "payflex": {
+            //String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new PaySelectionFlexMessage().get());
+            break;
+        }
+
+        case "購買資訊": {
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new BuyerInformationFlexMessage(buyerDAO,buyer_id).get());
+            break;
+        }
+
         case "我": {
             String buyer_id = event.getSource().getUserId();
             
