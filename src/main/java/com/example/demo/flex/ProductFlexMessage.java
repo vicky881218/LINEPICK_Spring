@@ -60,6 +60,7 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
     @Override
     public FlexMessage get(){
         try {
+            
             product = retrieveOneProduct(product_id);
             System.out.println("photo url");
             System.out.println(product.getProductPhoto());
@@ -139,26 +140,54 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
     }
 
     private Box createInfoBox() {
-        final Box place = Box
+        final Box desc = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("價格")
+                            .text("商品介紹:")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
-                            .build(),
-                        Text.builder()
-                            .text(""+product.getProductPrice())
-                            .wrap(true)
-                            .color("#666666")
-                            .size(FlexFontSize.SM)
-                            .flex(5)
                             .build()
                 ))
                 .build();
+                final Box descDetail = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text(product.getProductDesc())
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build();
+
+        final Box place =
+                Box.builder()
+                   .layout(FlexLayout.BASELINE)
+                   .spacing(FlexMarginSize.SM)
+                   .contents(asList(
+                        Text.builder()
+                        .text("價格")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .build(),
+                Text.builder()
+                        .text(""+product.getProductPrice())
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(5)
+                        .build()
+                   ))
+                   .build();
+
         final Box time =
                 Box.builder()
                    .layout(FlexLayout.BASELINE)
@@ -184,7 +213,7 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(place, time))
+                  .contents(asList(desc,descDetail,place,time))
                   .build();
     }
 

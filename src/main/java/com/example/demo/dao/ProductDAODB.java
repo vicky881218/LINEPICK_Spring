@@ -36,6 +36,19 @@ public class ProductDAODB implements ProductDAO{
       new ProductMapper());
  }
 
+ public List<Product> findOneProductAllStyle(String product_name) {
+   System.out.println("productDAODB");
+   System.out.println(product_name);
+  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_name=? group by product_style ", 
+   new ProductMapper(),product_name);
+}
+
+public List<Product> findOneProductAllSize(String product_style) {
+  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_style=?", 
+   new ProductMapper(),product_style);
+}
+
+
  private static final class ProductMapper implements RowMapper<Product> {
 
      public Product mapRow(ResultSet rs, int rowNum) throws SQLException {

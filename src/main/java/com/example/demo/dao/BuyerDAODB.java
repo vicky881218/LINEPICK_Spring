@@ -51,7 +51,7 @@ public JdbcTemplate getJdbcTemplate() {
  }
 
  public List<Buyer> findAll() {
-     return this.jdbcTemplate.query( "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer", 
+     return this.jdbcTemplate.query( "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from buyer", 
       new BuyerMapper());
  }
 

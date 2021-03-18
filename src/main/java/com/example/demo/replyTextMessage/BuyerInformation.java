@@ -1,7 +1,6 @@
 package com.example.demo.replyTextMessage;
 
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.function.Supplier;
 
 import com.example.demo.dao.BuyerDAO;

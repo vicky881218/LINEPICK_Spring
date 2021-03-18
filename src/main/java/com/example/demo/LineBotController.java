@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
 import com.example.demo.dao.ProductDAO;
+import com.example.demo.dao.TypeDAO;
 import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
 import com.linecorp.bot.client.LineMessagingClient;
@@ -35,6 +36,8 @@ public class LineBotController {
     private BuyerDAO buyerDAO;
     @Autowired
     private ProductDAO productDAO;
+    @Autowired
+    private TypeDAO typeDAO;
 
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -140,7 +143,7 @@ public class LineBotController {
 
         case "flex": {
             String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new testFlexMessage(buyerDAO,buyer_id).get());
+            this.reply(replyToken, new testFlexMessage(buyerDAO, buyer_id).get());
             break;
         }
 
@@ -151,19 +154,19 @@ public class LineBotController {
 
         case "顏色flex": {
             //String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new ColorFlexMessage().get());
+            this.reply(replyToken, new StyleFlexMessage(productDAO).get());
             break;
         }
 
         case "sizeflex": {
             //String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new SizeFlexMessage().get());
+            this.reply(replyToken, new SizeFlexMessage(productDAO).get());
             break;
         }
         
         case "pickmoneyflex": {
             //String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new PickmoneyFlexMessage().get());
+            this.reply(replyToken, new UsePickmoneyFlexMessage().get());
             break;
         }
 
@@ -173,31 +176,29 @@ public class LineBotController {
             break;
         }
 
-        case "購買資訊": {
+        case "下單": {
             String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new BuyerInformationFlexMessage(buyerDAO,buyer_id).get());
+            this.reply(replyToken, new BuyerInfFlexMessage(buyerDAO,buyer_id).get());
             break;
         }
 
         case "我": {
             String buyer_id = event.getSource().getUserId();
-            
+
             try {
-                BuyerInformation buyer = new BuyerInformation(buyerDAO,text,buyer_id);
-                this.reply(replyToken,buyer.get());
-            }
-            catch (DuplicateKeyException e){
+                BuyerInformation buyer = new BuyerInformation(buyerDAO, text, buyer_id);
+                this.reply(replyToken, buyer.get());
+            } catch (DuplicateKeyException e) {
                 System.out.println("exists");
-            }
-            catch (SQLException e){
+            } catch (SQLException e) {
+                System.out.println(e);
+            } catch (Exception e) {
                 System.out.println(e);
             }
-            catch (Exception e){
-                System.out.println(e);
-            }
-            
+
             break;
         }
+
         default:
             this.replyText(replyToken, text);
             break;
