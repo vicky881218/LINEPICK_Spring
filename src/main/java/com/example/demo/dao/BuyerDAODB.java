@@ -51,7 +51,7 @@ public JdbcTemplate getJdbcTemplate() {
  }
 
  public List<Buyer> findAll() {
-     return this.jdbcTemplate.query( "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer", 
+     return this.jdbcTemplate.query( "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from buyer", 
       new BuyerMapper());
  }
 
@@ -77,17 +77,19 @@ public JdbcTemplate getJdbcTemplate() {
     Buyer.getBuyerAddress(), Buyer.getPickpoint(), Buyer.getPickmoney());
  }
  
- public int update(Buyer Buyer) {
+ public int update(Buyer buyer) {
   return jdbcTemplate.update(
-    "update Buyer set buyer_name=?, buyer_phone=?,buyer_mail=?,buyer_address=?, pickpoint=?,pickmone=? where buyer_id =?",
-    Buyer.getBuyerName(), Buyer.getBuyerPhone(),Buyer.getBuyerMail(),
-    Buyer.getBuyerAddress(), Buyer.getPickpoint(), Buyer.getPickmoney(),Buyer.getBuyerId());
+    "update Buyer set buyer_name=?, buyer_phone=?,buyer_mail=?,buyer_address=?, pickpoint=?,pickmoney=? where buyer_id =?",
+    buyer.getBuyerName(), buyer.getBuyerPhone(),buyer.getBuyerMail(),
+    buyer.getBuyerAddress(), buyer.getPickpoint(), buyer.getPickmoney(),buyer.getBuyerId());
  }
 
  public int delete(String buyer_id) {
   return jdbcTemplate.update(
     "delete from Buyer where buyer_id =?", buyer_id);
  }
+
+ 
 
  
 }

@@ -1,8 +1,15 @@
 package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
+import com.example.demo.dao.BuyerDAODB;
+import com.example.demo.dao.OrderListDAO;
+import com.example.demo.dao.ReplyDAO;
+import com.example.demo.dao.TypeDAO;
+import com.example.demo.entity.Buyer;
 import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
+import com.example.demo.replyTextMessage.ExchangePickMoney;
+import com.example.demo.replyTextMessage.ExchangePickMoneyAll;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
@@ -32,6 +39,14 @@ public class LineBotController {
     private LineMessagingClient lineMessagingClient;
     @Autowired
     private BuyerDAO buyerDAO;
+    @Autowired
+    private OrderListDAO orderListDAO;
+    @Autowired
+    private ReplyDAO replyDAO;
+    @Autowired
+    private TypeDAO typeDAO;
+
+    private Buyer buyer;
 
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -134,10 +149,62 @@ public class LineBotController {
             this.reply(replyToken, new QuickReplyMessage().get());
             break;
         }
-
+        case "type": {
+            this.reply(replyToken, new TypeQuickReplyMessage(typeDAO).get());
+            break;
+        }
         case "flex": {
             String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new testFlexMessage(buyerDAO,buyer_id).get());
+            break;
+        }
+        case "賴皮客服": {
+            int seller_id=1;
+            this.reply(replyToken, new QAFlexMessage(replyDAO,seller_id).get());
+            break;
+        }
+        case "賴皮指數": {
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new PickPointFlexMessage(buyerDAO,buyer_id).get());
+            break;
+        }
+        case "兌換": {
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new PickMoneyFlexMessage(buyerDAO,buyer_id).get());
+            break;
+        }
+    
+        case "賴皮紀錄": {
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new OrderStatusFlexMessage(orderListDAO,buyer_id).get());
+            break;
+        }
+        case "兌換全部":{
+        
+            String buyer_id = event.getSource().getUserId();
+           
+            try{
+                ExchangePickMoneyAll exchangePickMoneyAll = new ExchangePickMoneyAll(buyerDAO,buyer_id);
+                this.reply(replyToken,exchangePickMoneyAll.get());
+                
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+            break;
+        }
+        case "兌換一次":{
+        
+            String buyer_id = event.getSource().getUserId();
+           
+            try{
+                ExchangePickMoney exchangePickMoney = new ExchangePickMoney(buyerDAO,buyer_id);
+                this.reply(replyToken,exchangePickMoney.get());
+                
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
             break;
         }
         case "我": {

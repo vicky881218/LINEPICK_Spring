@@ -14,4 +14,5 @@ public interface BuyerDAO {
     public Buyer findOne(String buyer_id);
     public int update(Buyer buyer);
     public int delete(String buyer_id);
+
 }
