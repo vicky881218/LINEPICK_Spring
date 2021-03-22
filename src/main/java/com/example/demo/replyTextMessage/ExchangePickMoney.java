@@ -51,7 +51,7 @@ public class ExchangePickMoney implements Supplier<TextMessage> {
           // int newPickMoney=buyer.getPickmoney();
            buyerDAO.update(buyer);
        // final Text text1 = Text.builder().text("PickMoney:").text(""+pickmoney).build();
-        return new TextMessage("您兌換後的購物金總額為"+pickmoney+"元,"+"剩餘賴皮指數為"+pickpoint+"點");
+        return new TextMessage("您兌換過後的購物金總額為"+buyer.getPickmoney()+"元,"+"剩餘賴皮指數為"+buyer.getPickpoint()+"點");
       
     }
 }
