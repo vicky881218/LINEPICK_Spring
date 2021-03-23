@@ -75,8 +75,7 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
         List<Bubble> bubble = new ArrayList<>();
 
         try {
-            product = retrieveOneProduct(product_id);
-            
+            product = retrieveOneProduct(product_id);         
             productAllStyle = retrieveOneProductsAllStyle();
         }
         catch (SQLException e){
@@ -104,7 +103,6 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
                       .footer(footerBlock)
                       .build());
         }
-
 
         final Carousel carousel = Carousel.builder().contents(bubble).build();
 

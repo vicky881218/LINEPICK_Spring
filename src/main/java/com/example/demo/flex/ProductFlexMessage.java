@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.function.Supplier;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import com.linecorp.bot.model.action.MessageAction;
@@ -24,54 +24,95 @@ import com.linecorp.bot.model.message.flex.component.Spacer;
 import com.linecorp.bot.model.message.flex.component.Text;
 import com.linecorp.bot.model.message.flex.component.Text.TextWeight;
 import com.linecorp.bot.model.message.flex.container.Bubble;
+import com.linecorp.bot.model.message.flex.container.Carousel;
 import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
+import com.example.demo.dao.ProductTypeDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductType;
 
 public class ProductFlexMessage implements Supplier<FlexMessage> {
  
     private ProductDAO productDAO;
     private Product product;
     private int product_id;
+    private ProductTypeDAO productTypeDAO;
+    private ProductType productType;
+    private int type_id;
 
-    public ProductFlexMessage(ProductDAO productDAO) {
+    public ProductFlexMessage(ProductDAO productDAO, ProductTypeDAO productTypeDAO) {
         this.productDAO = productDAO;
+        this.productTypeDAO = productTypeDAO;
     }
 
     public List<Product> retrieveProducts() throws SQLException{
         return productDAO.findAll();
      }
 
+     public List<ProductType> retrievefindOneProuductType(int type_id) throws SQLException{
+        type_id = 1;
+        return productTypeDAO.findProuductType(type_id); 
+        //找同一個type_id內的所有produt_id 
+     }
+
      public Product retrieveOneProduct(int product_id) throws SQLException{
         product_id = 1;
-        // System.out.println("here");
-        // System.out.println(productDAO);
         Product p = productDAO.findOne(product_id);
-        // System.out.println(p);
-        // System.out.println(productDAO.findOne(product_id));
-
         return p;  
      }
 
+     public List<Product> retrievefindOneTypeAllProduct(int product_id) throws SQLException{
+        return productDAO.findOneTypeAllProduct(product_id);  
+     }
+
+     public List<Product> retrievefindOneByName(String product_name) throws SQLException{
+        return productDAO.findOneByName(product_name);  
+     }
 
     @Override
     public FlexMessage get(){
+
+        List<ProductType> oneTypeProductId = new ArrayList<>();
+        List<Product> oneTypeProductName = new ArrayList<>();
+        List<String> oneTypeProductDistinctName = new ArrayList<String>();
+        List<Product> fineOneProductByName = new ArrayList<>();
+        List<FlexMessage> flex = new ArrayList<>();
+        List<Bubble> bubble = new ArrayList<>();
+        
         try {
-            
+
             product = retrieveOneProduct(product_id);
-            System.out.println("photo url");
-            System.out.println(product.getProductPhoto());
-            
-        }
-        catch (SQLException e){
-            System.out.println("Error: "+e);
-        }
+            oneTypeProductId=retrievefindOneProuductType(type_id);
+
+            for(ProductType x : oneTypeProductId){
+                product_id=x.getProductId();
+                System.out.println("in for");
+                System.out.println(product_id);
+                oneTypeProductName=retrievefindOneTypeAllProduct(product_id);
+                System.out.println("after");
+                System.out.println(oneTypeProductName);
+                for(Product y : oneTypeProductName){
+                    String product_name=y.getProductName();
+                    if(oneTypeProductDistinctName.contains(product_name)){
+                        System.out.println("exist");
+                    }else{
+                        System.out.println("!!!try!!!");
+                        System.out.println(product_name);
+                        oneTypeProductDistinctName.add(product_name);
+                        System.out.println(oneTypeProductDistinctName);
+                        fineOneProductByName = retrievefindOneByName(product_name);
+
+                        System.out.println("fineOneProductByName");
+                        System.out.println(fineOneProductByName);
+                    
+
+        for(Product z : fineOneProductByName){
         final Image heroBlock =
                 Image.builder()
-                     .url(URI.create(product.getProductPhoto()))
+                     .url(URI.create(z.getProductPhoto()))
                      .size(ImageSize.FULL_WIDTH)
                      .aspectRatio(ImageAspectRatio.R20TO13)
                      .aspectMode(ImageAspectMode.Cover)
@@ -80,16 +121,25 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
 
         
         final Box footerBlock = createFooterBlock();
-        final Box bodyBlock = createBodyBlock();
-        final Bubble bubble =
+        final Box bodyBlock = createBodyBlock(z);
+        bubble.add(
                 Bubble.builder()
                       .hero(heroBlock)
                       .body(bodyBlock)
                       .footer(footerBlock)
-                      .build();
-        
+                      .build());
+        }
+    }
+}
+}
 
-        return new FlexMessage("ALT", bubble);
+}
+catch (SQLException e){
+System.out.println("Error: "+e);
+}
+        final Carousel carousel = Carousel.builder().contents(bubble).build();
+
+        return new FlexMessage("同分類商品", carousel);
     }
 
     private Box createFooterBlock(){
@@ -122,16 +172,16 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
                   .build();
     }
 
-    private Box createBodyBlock() {
+    private Box createBodyBlock(Product z) {
         final Text title =
                 Text.builder()
-                    .text(product.getProductName())
+                    .text(z.getProductName())
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.XL)
                     .build();
 
 
-        final Box info = createInfoBox();
+        final Box info = createInfoBox(z);
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
@@ -139,7 +189,7 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
                   .build();
     }
 
-    private Box createInfoBox() {
+    private Box createInfoBox(Product z) {
         final Box desc = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
@@ -159,7 +209,7 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text(product.getProductDesc())
+                            .text(z.getProductDesc())
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
@@ -179,7 +229,7 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
                         .flex(1)
                         .build(),
                 Text.builder()
-                        .text(""+product.getProductPrice())
+                        .text(""+z.getProductPrice())
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)

@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
 import com.example.demo.dao.ProductDAO;
+import com.example.demo.dao.ProductTypeDAO;
 import com.example.demo.dao.TypeDAO;
 import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
@@ -36,6 +37,8 @@ public class LineBotController {
     private BuyerDAO buyerDAO;
     @Autowired
     private ProductDAO productDAO;
+    @Autowired
+    private ProductTypeDAO productTypeDAO;
     @Autowired
     private TypeDAO typeDAO;
 
@@ -148,7 +151,7 @@ public class LineBotController {
         }
 
         case "衣服flex": {
-            this.reply(replyToken, new ProductFlexMessage(productDAO).get());
+            this.reply(replyToken, new ProductFlexMessage(productDAO, productTypeDAO).get());
             break;
         }
 

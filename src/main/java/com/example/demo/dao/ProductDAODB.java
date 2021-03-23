@@ -36,9 +36,18 @@ public class ProductDAODB implements ProductDAO{
       new ProductMapper());
  }
 
+ public List<Product> findOneByName(String product_name) {
+ return this.jdbcTemplate.query( 
+  "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_name = ? group by product_name", 
+  new ProductMapper(), product_name);
+}
+
+ public List<Product> findOneTypeAllProduct(int product_id) {
+  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_id=? group by product_name", 
+   new ProductMapper(),product_id);
+}
+
  public List<Product> findOneProductAllStyle(String product_name) {
-   System.out.println("productDAODB");
-   System.out.println(product_name);
   return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_name=? group by product_style ", 
    new ProductMapper(),product_name);
 }

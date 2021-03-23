@@ -74,7 +74,6 @@ public class SizeFlexMessage implements Supplier<FlexMessage> {
         try {
             product = retrieveOneProduct(product_id);
             productAllSize = retrieveOneProductsAllSize();
-            
         }
         catch (SQLException e){
             System.out.println("Error: "+e);
@@ -84,7 +83,7 @@ public class SizeFlexMessage implements Supplier<FlexMessage> {
 
         final Image heroBlock =
                 Image.builder()
-                     .url(URI.create(product.getProductPhoto()))
+                     .url(URI.create(x.getProductPhoto()))
                      .size(ImageSize.FULL_WIDTH)
                      .aspectRatio(ImageAspectRatio.R20TO13)
                      .aspectMode(ImageAspectMode.Cover)
