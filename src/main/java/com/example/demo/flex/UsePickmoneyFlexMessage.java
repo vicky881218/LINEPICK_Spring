@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 
 import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
@@ -32,7 +33,7 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
                       .build();
         
 
-        return new FlexMessage("ALT", bubble);
+        return new FlexMessage("是否使用購物金", bubble);
     }
 
     private Box createFooterBlock(){
@@ -41,14 +42,22 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("是", "是"))
+                .action(PostbackAction.builder()
+                        .label("是")
+                        .text("使用購物金")
+                        .data("使用購物金")
+                        .build())
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("否", "否"))
+                      .action(PostbackAction.builder()
+                      .label("否")
+                      .text("不使用購物金")
+                      .data("不使用購物金")
+                      .build())
                       .build();
 
         return Box.builder()

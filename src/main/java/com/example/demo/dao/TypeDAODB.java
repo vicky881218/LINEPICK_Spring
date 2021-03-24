@@ -32,6 +32,18 @@ public class TypeDAODB implements TypeDAO {
         return aType;
     }
 
+    public Type findTypeId(String type_name) {
+        try {
+            Connection connection = dataSource.getConnection();
+        } catch (Exception e) {
+            System.out.println("Error in findOne:" + e);
+        }
+        Type aType = jdbcTemplate.queryForObject(
+                "select type_id,type_name,seller_id from Type where type_name = ?",
+                new typeMapper(), type_name);
+        return aType;
+    }
+
     public List<Type> findAll() {
         return this.jdbcTemplate.query(
                 "select type_id,type_name,seller_id from Type",

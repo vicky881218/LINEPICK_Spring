@@ -30,9 +30,11 @@ import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
 import com.example.demo.dao.ProductTypeDAO;
+import com.example.demo.dao.TypeDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductType;
+import com.example.demo.entity.Type;
 
 public class ProductFlexMessage implements Supplier<FlexMessage> {
  
@@ -42,27 +44,36 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
     private ProductTypeDAO productTypeDAO;
     private ProductType productType;
     private int type_id;
+    private String type_name;
+    private Type Type;
+    private TypeDAO typeDAO;
 
-    public ProductFlexMessage(ProductDAO productDAO, ProductTypeDAO productTypeDAO) {
+    public ProductFlexMessage(TypeDAO typeDAO,ProductDAO productDAO, ProductTypeDAO productTypeDAO,String type_name) {
         this.productDAO = productDAO;
+        this.typeDAO = typeDAO;
         this.productTypeDAO = productTypeDAO;
+        this.type_name = type_name;
     }
+
+    public Type retrieveOneTypeId(String type_name) throws SQLException{
+        return typeDAO.findTypeId(type_name);
+        
+     }
 
     public List<Product> retrieveProducts() throws SQLException{
         return productDAO.findAll();
      }
 
      public List<ProductType> retrievefindOneProuductType(int type_id) throws SQLException{
-        type_id = 1;
         return productTypeDAO.findProuductType(type_id); 
         //找同一個type_id內的所有produt_id 
      }
 
-     public Product retrieveOneProduct(int product_id) throws SQLException{
-        product_id = 1;
-        Product p = productDAO.findOne(product_id);
-        return p;  
-     }
+    //  public Product retrieveOneProduct(int product_id) throws SQLException{
+    //     product_id = 1;
+    //     Product p = productDAO.findOne(product_id);
+    //     return p;  
+    //  }
 
      public List<Product> retrievefindOneTypeAllProduct(int product_id) throws SQLException{
         return productDAO.findOneTypeAllProduct(product_id);  
@@ -81,32 +92,38 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
         List<Product> fineOneProductByName = new ArrayList<>();
         List<FlexMessage> flex = new ArrayList<>();
         List<Bubble> bubble = new ArrayList<>();
+
+        System.out.println("here is type_name");
+        System.out.println(type_name);
         
         try {
-
-            product = retrieveOneProduct(product_id);
+            System.out.println("here is type_id in flex");
+            System.out.println(retrieveOneTypeId(type_name).getTypeId());
+            System.out.println("upper");
+            type_id=retrieveOneTypeId(type_name).getTypeId();
+            //product = retrieveOneProduct(product_id);
             oneTypeProductId=retrievefindOneProuductType(type_id);
 
             for(ProductType x : oneTypeProductId){
                 product_id=x.getProductId();
-                System.out.println("in for");
-                System.out.println(product_id);
+                // System.out.println("in for");
+                // System.out.println(product_id);
                 oneTypeProductName=retrievefindOneTypeAllProduct(product_id);
-                System.out.println("after");
-                System.out.println(oneTypeProductName);
+                // System.out.println("after");
+                // System.out.println(oneTypeProductName);
                 for(Product y : oneTypeProductName){
                     String product_name=y.getProductName();
                     if(oneTypeProductDistinctName.contains(product_name)){
-                        System.out.println("exist");
+                        //System.out.println("exist");
                     }else{
-                        System.out.println("!!!try!!!");
-                        System.out.println(product_name);
+                        // System.out.println("!!!try!!!");
+                        // System.out.println(product_name);
                         oneTypeProductDistinctName.add(product_name);
-                        System.out.println(oneTypeProductDistinctName);
+                        //System.out.println(oneTypeProductDistinctName);
                         fineOneProductByName = retrievefindOneByName(product_name);
 
-                        System.out.println("fineOneProductByName");
-                        System.out.println(fineOneProductByName);
+                        // System.out.println("fineOneProductByName");
+                        // System.out.println(fineOneProductByName);
                     
 
         for(Product z : fineOneProductByName){
@@ -145,12 +162,12 @@ System.out.println("Error: "+e);
     private Box createFooterBlock(){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
 
-        try {
-            product = retrieveOneProduct(product_id);
-        }
-        catch (SQLException e){
-            System.out.println("Error: "+e);
-        }
+        // try {
+        //     product = retrieveOneProduct(product_id);
+        // }
+        // catch (SQLException e){
+        //     System.out.println("Error: "+e);
+        // }
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)

@@ -10,8 +10,10 @@ import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
 import com.linecorp.bot.model.event.message.StickerMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.postback.PostbackContent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.StickerMessage;
 import com.linecorp.bot.model.message.TextMessage;
@@ -27,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 
 @LineMessageHandler
 public class LineBotController {
@@ -63,9 +66,34 @@ public class LineBotController {
         this.reply(replyToken, new StickerMessage(packageId, stickerId));
     }
 
+
+
     @EventMapping
-    public void handleDefaultEvent(Event event) {
+    public void handleDefaultEvent(PostbackEvent event) {
         System.out.println("event: " + event);
+        System.out.println("event: " + event.getReplyToken());
+        System.out.println("data: " + event.getPostbackContent().getData());
+        String data= event.getPostbackContent().getData();
+        String replyToken= event.getReplyToken();
+
+        switch (event.getPostbackContent().getData()){
+            case "上衣": case "褲裝":
+            String type_name=data;
+            this.reply(replyToken, new ProductFlexMessage(typeDAO,productDAO, productTypeDAO,type_name).get());
+            break;
+
+
+            
+            case "使用購物金":
+                System.out.println(data);
+                break;
+            case "不使用購物金":
+                System.out.println(data);
+                break;
+        
+        }
+
+
     }
 
     private void reply(String replyToken, List<Message> messages) {
@@ -75,6 +103,7 @@ public class LineBotController {
             throw new RuntimeException(e);
         }
     }
+
 
     private void reply(String replyToken, Message message) {
         reply(replyToken, Collections.singletonList(message));
@@ -150,38 +179,43 @@ public class LineBotController {
             break;
         }
 
-        case "衣服flex": {
-            this.reply(replyToken, new ProductFlexMessage(productDAO, productTypeDAO).get());
+        case "分類": {
+            this.reply(replyToken, new TypeQuickReplyMessage(typeDAO).get());
             break;
         }
 
+        // case "衣服flex": {
+        //     this.reply(replyToken, new ProductFlexMessage(productDAO, productTypeDAO).get());
+        //     break;
+        // }
+
         case "顏色flex": {
-            //String buyer_id = event.getSource().getUserId();
+            // String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new StyleFlexMessage(productDAO).get());
             break;
         }
 
         case "sizeflex": {
-            //String buyer_id = event.getSource().getUserId();
+            // String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new SizeFlexMessage(productDAO).get());
             break;
         }
-        
+
         case "pickmoneyflex": {
-            //String buyer_id = event.getSource().getUserId();
+            // String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new UsePickmoneyFlexMessage().get());
             break;
         }
 
         case "payflex": {
-            //String buyer_id = event.getSource().getUserId();
+            // String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new PaySelectionFlexMessage().get());
             break;
         }
 
         case "下單": {
             String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new BuyerInfFlexMessage(buyerDAO,buyer_id).get());
+            this.reply(replyToken, new BuyerInfFlexMessage(buyerDAO, buyer_id).get());
             break;
         }
 
@@ -203,7 +237,7 @@ public class LineBotController {
         }
 
         default:
-            this.replyText(replyToken, text);
+            //this.replyText(replyToken, text);
             break;
 
         }
