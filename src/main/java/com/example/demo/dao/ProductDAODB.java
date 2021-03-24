@@ -26,7 +26,7 @@ public class ProductDAODB implements ProductDAO{
  public Product findOne(int product_id) {
 
    Product aProduct = jdbcTemplate.queryForObject( 
-    "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_id = ?", 
+    "select * from product where product_id = ?", 
     new ProductMapper(), product_id);
   return aProduct;
  }
@@ -36,6 +36,11 @@ public class ProductDAODB implements ProductDAO{
       new ProductMapper());
  }
 
+ public List<Product> findOrderProduct(int product_id) {
+  return this.jdbcTemplate.query( "select * from product where product_id=?", 
+   new ProductMapper(), product_id);
+}
+ 
  private static final class ProductMapper implements RowMapper<Product> {
 
      public Product mapRow(ResultSet rs, int rowNum) throws SQLException {

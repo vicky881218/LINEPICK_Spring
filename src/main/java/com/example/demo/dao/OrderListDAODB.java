@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.OrderList; 
-import com.example.demo.entity.OrderItem;
+
 
 @Repository
 public class OrderListDAODB implements OrderListDAO{
@@ -37,16 +37,56 @@ public class OrderListDAODB implements OrderListDAO{
     new OrderListMapper(), buyer_id);
     
   return anOrderList;
-    /*
-     return this.jdbcTemplate.queryForObject( 
-      "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer where buyer_id = ?", 
-      new BuyerMapper(),buyer_id); */
+    
+ }
+ public OrderList findByOrderStatus(String orderlist_status) {
+  orderlist_status = "已完成";
+  OrderList anOrderList = jdbcTemplate.queryForObject( 
+    "select * from orderlist where orderlist_status = ? group by orderlist_status", 
+    new OrderListMapper(), orderlist_status);
+    
+  return anOrderList;
+   
+}
+public OrderList findByOrderStatus1(String orderlist_status) {
+ orderlist_status = "未出貨";
+  OrderList anOrderList = jdbcTemplate.queryForObject( 
+    "select * from orderlist where orderlist_status=? group by orderlist_status", 
+    new OrderListMapper(), orderlist_status);
+    
+  return anOrderList;
+   
+}
+public OrderList findByOrderStatus2(String orderlist_status) {
+  orderlist_status = "運送中";
+   OrderList anOrderList = jdbcTemplate.queryForObject( 
+     "select * from orderlist where orderlist_status=? group by orderlist_status", 
+     new OrderListMapper(), orderlist_status);
+     
+   return anOrderList;
+    
  }
  public List<OrderList> findAll() {
     return this.jdbcTemplate.query( "select * from orderlist", 
      new OrderListMapper());
 }
 
+public List<OrderList> findAllMyOrderList(String orderlist_status, String buyer_id) {
+  orderlist_status = "已完成";
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
+   new OrderListMapper(), orderlist_status, buyer_id);
+}
+
+public List<OrderList> findAllMyOrderList1(String orderlist_status, String buyer_id) {
+  orderlist_status = "未出貨";
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
+   new OrderListMapper(),orderlist_status, buyer_id);
+}
+public List<OrderList> findAllMyOrderList2(String orderlist_status, String buyer_id) {
+  orderlist_status = "運送中";
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
+   new OrderListMapper(),orderlist_status, buyer_id);
+}
  private static final class OrderListMapper implements RowMapper<OrderList> {
 
      public OrderList mapRow(ResultSet rs, int rowNum) throws SQLException {

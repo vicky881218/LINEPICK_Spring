@@ -11,6 +11,7 @@ import java.util.List;
 public interface ProductDAO {
     public int insert(Product Product) throws SQLException;
     public List<Product> findAll();
+    public List<Product> findOrderProduct(int product_id);
     public Product findOne(int product_id);
     public int update(Product product);
     public int delete(String product_id);

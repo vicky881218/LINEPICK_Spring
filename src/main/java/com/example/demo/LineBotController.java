@@ -5,6 +5,8 @@ import com.example.demo.dao.BuyerDAODB;
 import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ReplyDAO;
 import com.example.demo.dao.TypeDAO;
+import com.example.demo.dao.ProductDAO;
+import com.example.demo.dao.OrderItemDAO;
 import com.example.demo.entity.Buyer;
 import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
@@ -45,6 +47,10 @@ public class LineBotController {
     private ReplyDAO replyDAO;
     @Autowired
     private TypeDAO typeDAO;
+    @Autowired
+    private ProductDAO productDAO;
+    @Autowired
+    private OrderItemDAO orderItemDAO;
 
     private Buyer buyer;
 
@@ -177,6 +183,24 @@ public class LineBotController {
         case "賴皮紀錄": {
             String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new OrderStatusFlexMessage(orderListDAO,buyer_id).get());
+            break;
+        }
+        case "已完成": {
+            String buyer_id = event.getSource().getUserId();
+            String orderlist_status = "已完成";
+            this.reply(replyToken, new OrderListFinishFlexMessage(buyer_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            break;
+        }
+        case "未出貨": {
+            String buyer_id = event.getSource().getUserId();
+            String orderlist_status = "未出貨";
+            this.reply(replyToken, new OrderListNotYetFlexMessage(buyer_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            break;
+        }
+        case "運送中": {
+            String buyer_id = event.getSource().getUserId();
+            String orderlist_status = "運送中";
+            this.reply(replyToken, new OrderListTransportFlexMessage(buyer_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
             break;
         }
         case "兌換全部":{

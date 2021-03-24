@@ -42,24 +42,9 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
     public OrderStatusFlexMessage(OrderListDAO orderListDAO, String buyer_id) {
         this.orderListDAO = orderListDAO;
         this.buyer_id = buyer_id;
-       
-
     }
 
-    public List<OrderList> retrieveOrderLists() throws SQLException{
-        return orderListDAO.findAll();
-     }
-
-     public OrderList retrieveOneOrderList() throws SQLException{
-        System.out.println("!!!!!!!!!!!!!!!!!");
-        System.out.println(orderlist_id);
-        //buyer_id = "U03f0c8f23e837621589cd133fad12490";
-        // List <Buyer> allBuyers = buyerDAO.findAll();
-        // System.out.println(allBuyers.size());
-        // System.out.println(buyerDAO.findOne(buyer_id));
-        return orderListDAO.findOne(buyer_id);  
-        
-     }
+    
 
 
     @Override
@@ -82,32 +67,33 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
 
     private Box createFooterBlock(){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
-        OrderList orderList = new OrderList();
         
-        try {
-            orderList = retrieveOneOrderList();
-        }
-        catch (SQLException e){
-            System.out.println(e);
-        }
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("已完成", orderList.getOrderListStatus()))
+                .action(new MessageAction("已完成","已完成"))
                 .build();
         final Separator separator = Separator.builder().build();
-        final Button websiteAction =
-                Button.builder()
-                      .style(ButtonStyle.LINK)
-                      .height(ButtonHeight.SMALL)
-                      .action(new URIAction("未完成", URI.create("https://example.com"), null))
-                      .build();
+        final Button notyet = Button
+                .builder()
+                .style(ButtonStyle.LINK)
+                .height(ButtonHeight.SMALL)
+                .action(new MessageAction("未出貨","未出貨"))
+                .build();
+        final Separator separator1 = Separator.builder().build();
+        final Button transport = Button
+                .builder()
+                .style(ButtonStyle.LINK)
+                .height(ButtonHeight.SMALL)
+                .action(new MessageAction("已出貨","運送中"))
+                .build();
+       
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, callAction, separator, websiteAction))
+                  .contents(asList(spacer, callAction,separator1,notyet, separator, transport))
                   .build();
     }
 
@@ -149,19 +135,32 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
                            Text.builder()
-                               .text("若是要查詢未完成的訂單，請按未完成")
+                               .text("若是要查詢未出貨的訂單，請按未出貨")
                                .color("#aaaaaa")
                                .size(FlexFontSize.SM)
                                .flex(1)
                                .build()
                    ))
                    .build();
+        final Box time2 =
+                   Box.builder()
+                      .layout(FlexLayout.BASELINE)
+                      .spacing(FlexMarginSize.SM)
+                      .contents(asList(
+                              Text.builder()
+                                  .text("若是要查詢運送中的訂單，請按已出貨")
+                                  .color("#aaaaaa")
+                                  .size(FlexFontSize.SM)
+                                  .flex(1)
+                                  .build()
+                      ))
+                      .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(place, time))
+                  .contents(asList(place, time, time2))
                   .build();
     }
 
