@@ -112,7 +112,7 @@ public class QAFlexMessage implements Supplier<FlexMessage> {
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("Q:"+x.getReplyQuestion()+"?")
+                            .text(""+x.getReplyQuestion())
                             .color("#aaaaaa")
                             .size(FlexFontSize.LG)
                             .flex(1)
@@ -125,7 +125,7 @@ public class QAFlexMessage implements Supplier<FlexMessage> {
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
                            Text.builder()
-                               .text("A:"+x.getReplyAnswer())
+                               .text(""+x.getReplyAnswer())
                                .color("#aaaaaa")
                                .size(FlexFontSize.Md)
                                .flex(1)

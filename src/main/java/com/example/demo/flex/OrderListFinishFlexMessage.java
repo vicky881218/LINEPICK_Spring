@@ -47,8 +47,9 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
     private String orderlist_status;
     private int orderlist_id;
 
-    public OrderListFinishFlexMessage(String buyer_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO) {
+    public OrderListFinishFlexMessage(String buyer_id, int product_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO) {
         this.buyer_id = buyer_id;
+        this.product_id = product_id;
         this.orderlist_status = orderlist_status;
         this.orderListDAO = orderListDAO;
         this.productDAO = productDAO;

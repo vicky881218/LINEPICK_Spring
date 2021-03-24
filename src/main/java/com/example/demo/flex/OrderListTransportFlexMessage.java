@@ -47,8 +47,9 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
     private String orderlist_status;
     private int orderlist_id;
 
-    public OrderListTransportFlexMessage(String buyer_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO) {
+    public OrderListTransportFlexMessage(String buyer_id, int product_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO) {
         this.buyer_id = buyer_id;
+        this.product_id = product_id;
         this.orderlist_status = orderlist_status;
         this.orderListDAO = orderListDAO;
         this.productDAO = productDAO;
@@ -70,7 +71,7 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
      }
 
      public Product retrieveOneProduct(int product_id) throws SQLException{
-       product_id = 1;
+      // product_id = 1;
         return productDAO.findOne(product_id); 
      }
     

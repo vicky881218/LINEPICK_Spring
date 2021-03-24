@@ -187,20 +187,23 @@ public class LineBotController {
         }
         case "已完成": {
             String buyer_id = event.getSource().getUserId();
+            int product_id = 1;
             String orderlist_status = "已完成";
-            this.reply(replyToken, new OrderListFinishFlexMessage(buyer_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            this.reply(replyToken, new OrderListFinishFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
             break;
         }
         case "未出貨": {
             String buyer_id = event.getSource().getUserId();
+            int product_id = 1;
             String orderlist_status = "未出貨";
-            this.reply(replyToken, new OrderListNotYetFlexMessage(buyer_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            this.reply(replyToken, new OrderListNotYetFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
             break;
         }
         case "運送中": {
             String buyer_id = event.getSource().getUserId();
+            int product_id = 1;
             String orderlist_status = "運送中";
-            this.reply(replyToken, new OrderListTransportFlexMessage(buyer_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            this.reply(replyToken, new OrderListTransportFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
             break;
         }
         case "兌換全部":{
