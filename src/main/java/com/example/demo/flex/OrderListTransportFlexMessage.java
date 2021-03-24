@@ -164,10 +164,8 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                     .size(FlexFontSize.XL)
                     .build();
 
-
         final Box info = createInfoBox(z);
         
-
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .contents(asList(title,info))
