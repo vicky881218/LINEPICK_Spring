@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
@@ -39,29 +39,32 @@ public class SizeFlexMessage implements Supplier<FlexMessage> {
     private int product_id;
     private Product x;
     private Product productAllSize;
+    private String product_name;
     private String product_style;
 
 
 
-    public SizeFlexMessage(ProductDAO productDAO) {
+    public SizeFlexMessage(ProductDAO productDAO,String product_style,String product_name) {
         this.productDAO = productDAO;
+        this.product_style=product_style;
+        this.product_name=product_name;
     }
 
     public List<Product> retrieveProductsAllSize() throws SQLException{
         return productDAO.findAll();
      }
 
-     public Product retrieveOneProduct(int product_id) throws SQLException{
-        product_id = 1;
-        Product p = productDAO.findOne(product_id);
-        return p;  
-     }
+    //  public Product retrieveOneProduct(int product_id) throws SQLException{
+    //     product_id = 1;
+    //     Product p = productDAO.findOne(product_id);
+    //     return p;  
+    //  }
 
-     public List<Product> retrieveOneProductsAllSize() throws SQLException{
-        product_style = "黑";
-        return productDAO.findOneProductAllSize(product_style);
+     public List<Product> retrieveOneProductsAllSize(String product_style,String product_name) throws SQLException{
+        //product_style = "黑";
+        System.out.println("up here or not");
+        return productDAO.findOneProductAllSize(product_style,product_name);
      }
-
 
 
     @Override
@@ -72,8 +75,9 @@ public class SizeFlexMessage implements Supplier<FlexMessage> {
         List<Bubble> bubble = new ArrayList<>();
 
         try {
-            product = retrieveOneProduct(product_id);
-            productAllSize = retrieveOneProductsAllSize();
+
+            productAllSize = retrieveOneProductsAllSize(product_style,product_name);
+
         }
         catch (SQLException e){
             System.out.println("Error: "+e);
@@ -90,7 +94,7 @@ public class SizeFlexMessage implements Supplier<FlexMessage> {
                      .build();
 
         
-        final Box footerBlock = createFooterBlock();
+        final Box footerBlock = createFooterBlock(x);
         final Box bodyBlock = createBodyBlock(x);
 
         bubble.add(
@@ -106,20 +110,24 @@ public class SizeFlexMessage implements Supplier<FlexMessage> {
         return new FlexMessage("SizeFlex", carousel);
     }
 
-    private Box createFooterBlock(){
+    private Box createFooterBlock(Product x){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
 
-        try {
-            product = retrieveOneProduct(product_id);
-        }
-        catch (SQLException e){
-            System.out.println("Error: "+e);
-        }
+        // try {
+        //    // product = retrieveOneProduct(product_id);
+        // }
+        // catch (SQLException e){
+        //     System.out.println("Error: "+e);
+        // }
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("Pick", "SizePick"))
+                .action(PostbackAction.builder()
+                                      .label("Pick")
+                                      .text("Pick"+x.getProductName()+x.getProductStyle()+x.getProductSize())
+                                      .data(x.getProductName()+" "+x.getProductStyle()+" "+x.getProductSize())
+                                      .build())
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =

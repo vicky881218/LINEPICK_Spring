@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
@@ -68,12 +69,6 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
         return productTypeDAO.findProuductType(type_id); 
         //找同一個type_id內的所有produt_id 
      }
-
-    //  public Product retrieveOneProduct(int product_id) throws SQLException{
-    //     product_id = 1;
-    //     Product p = productDAO.findOne(product_id);
-    //     return p;  
-    //  }
 
      public List<Product> retrievefindOneTypeAllProduct(int product_id) throws SQLException{
         return productDAO.findOneTypeAllProduct(product_id);  
@@ -137,7 +132,7 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
                      .build();
 
         
-        final Box footerBlock = createFooterBlock();
+        final Box footerBlock = createFooterBlock(z);
         final Box bodyBlock = createBodyBlock(z);
         bubble.add(
                 Bubble.builder()
@@ -159,27 +154,28 @@ System.out.println("Error: "+e);
         return new FlexMessage("同分類商品", carousel);
     }
 
-    private Box createFooterBlock(){
+    private Box createFooterBlock(Product z){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
-
-        // try {
-        //     product = retrieveOneProduct(product_id);
-        // }
-        // catch (SQLException e){
-        //     System.out.println("Error: "+e);
-        // }
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("Pick", "商品Pick"))
+                .action(PostbackAction.builder()
+                                      .label("Pick")
+                                      .text("Pick"+z.getProductName())
+                                      .data(z.getProductName())
+                                      .build())
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("加入賴皮願望", "加入賴皮願望"))
+                      .action(PostbackAction.builder()
+                                            .label("加入賴皮願望")
+                                            .text("將"+z.getProductName()+"加入賴皮願望")
+                                            .data(z.getProductName())
+                                            .build())
                       .build();
 
         return Box.builder()

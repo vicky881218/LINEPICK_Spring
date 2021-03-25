@@ -24,6 +24,7 @@ import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 import com.example.demo.dao.BuyerDAO;
 import com.example.demo.entity.Buyer;
 
+
 public class BuyerInfFlexMessage implements Supplier<FlexMessage>{
     private BuyerDAO buyerDAO;
     private String buyer_id;

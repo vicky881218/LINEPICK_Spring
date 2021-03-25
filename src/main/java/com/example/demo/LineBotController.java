@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -66,30 +67,67 @@ public class LineBotController {
         this.reply(replyToken, new StickerMessage(packageId, stickerId));
     }
 
-
+    List<String> order = new ArrayList<String>();
 
     @EventMapping
     public void handleDefaultEvent(PostbackEvent event) {
         System.out.println("event: " + event);
         System.out.println("event: " + event.getReplyToken());
         System.out.println("data: " + event.getPostbackContent().getData());
-        String data= event.getPostbackContent().getData();
+        String[] data= event.getPostbackContent().getData().split(" ");
         String replyToken= event.getReplyToken();
+        //List<String> order = new ArrayList<String>();
+        //order.clear();
 
-        switch (event.getPostbackContent().getData()){
+        switch (data[data.length-1]){
             case "上衣": case "褲裝":
-            String type_name=data;
+            String type_name=data[0];
             this.reply(replyToken, new ProductFlexMessage(typeDAO,productDAO, productTypeDAO,type_name).get());
             break;
 
+            case "背心": case "碎花裙":
+            String product_name=data[0];
+            order.add(product_name);
+            this.reply(replyToken, new StyleFlexMessage(productDAO,product_name).get());
+            break;
 
+            case "黑":  case "白": case "紅":
+            product_name=data[0];
+            String product_style=data[1];
+            order.add(product_style);
+            this.reply(replyToken, new SizeFlexMessage(productDAO,product_style,product_name).get());
+            break;
+
+            case "S":  case "M": case "L":
+            product_name=data[0];
+            product_style=data[1];
+            String product_size=data[2];
+            order.add(product_size);           
+            this.replyText(replyToken, "請輸入購買數量");
+            break;
             
-            case "使用購物金":
+            case "Y":
+                String usePickmoney=data[0];
                 System.out.println(data);
+                order.add(usePickmoney);
+                this.reply(replyToken, new PaySelectionFlexMessage().get());
                 break;
-            case "不使用購物金":
+
+            case "N":
+                usePickmoney=data[0];
                 System.out.println(data);
+                order.add(usePickmoney);
+                this.reply(replyToken, new PaySelectionFlexMessage().get());
                 break;
+
+            case "LinePay": case "匯款": case "貨到付款":
+                String paymentChoice=data[0];
+                order.add(paymentChoice);
+                System.out.println("here is final");
+                System.out.println(order);
+                String buyer_id = event.getSource().getUserId();
+                this.reply(replyToken, new OrderInformationFlexMessage(buyerDAO, buyer_id,order).get());
+            break;
         
         }
 
@@ -121,7 +159,12 @@ public class LineBotController {
 
     private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
         String text = content.getText();
-
+        String quantity = "^[0-9]";
+        if (text.matches(quantity)){
+            order.add(text);
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new UsePickmoneyFlexMessage(buyerDAO,buyer_id).get());
+        }
         switch (text) {
         case "profile": { // 名字+個簽
             String buyer_id = event.getSource().getUserId();
@@ -189,35 +232,35 @@ public class LineBotController {
         //     break;
         // }
 
-        case "顏色flex": {
-            // String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new StyleFlexMessage(productDAO).get());
-            break;
-        }
+        // case "顏色flex": {
+        //     // String buyer_id = event.getSource().getUserId();
+        //     this.reply(replyToken, new StyleFlexMessage(productDAO).get());
+        //     break;
+        // }
 
-        case "sizeflex": {
-            // String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new SizeFlexMessage(productDAO).get());
-            break;
-        }
+        // case "sizeflex": {
+        //     // String buyer_id = event.getSource().getUserId();
+        //     this.reply(replyToken, new SizeFlexMessage(productDAO).get());
+        //     break;
+        // }
 
-        case "pickmoneyflex": {
-            // String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new UsePickmoneyFlexMessage().get());
-            break;
-        }
+        // case "/[0-9]/": {
+        //     // String buyer_id = event.getSource().getUserId();
+        //     this.reply(replyToken, new UsePickmoneyFlexMessage().get());
+        //     break;
+        // }
 
-        case "payflex": {
-            // String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new PaySelectionFlexMessage().get());
-            break;
-        }
+        // case "payflex": {
+        //     // String buyer_id = event.getSource().getUserId();
+        //     this.reply(replyToken, new PaySelectionFlexMessage().get());
+        //     break;
+        // }
 
-        case "下單": {
-            String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new BuyerInfFlexMessage(buyerDAO, buyer_id).get());
-            break;
-        }
+        // case "下單": {
+        //     String buyer_id = event.getSource().getUserId();
+        //     this.reply(replyToken, new BuyerInfFlexMessage(buyerDAO, buyer_id).get());
+        //     break;
+        // }
 
         case "我": {
             String buyer_id = event.getSource().getUserId();

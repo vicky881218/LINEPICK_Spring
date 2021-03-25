@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.function.Supplier;
 
 import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
@@ -32,7 +33,7 @@ public class PaySelectionFlexMessage implements Supplier<FlexMessage> {
                       .build();
         
 
-        return new FlexMessage("ALT", bubble);
+        return new FlexMessage("付款方式", bubble);
     }
 
     private Box createFooterBlock(){
@@ -41,21 +42,33 @@ public class PaySelectionFlexMessage implements Supplier<FlexMessage> {
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("Line Pay", "Line Pay"))
+                .action(PostbackAction.builder()
+                                      .label("Line Pay")
+                                      .text("Line Pay")
+                                      .data("LinePay")
+                                      .build())
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("匯款", "匯款"))
+                      .action(PostbackAction.builder()
+                                            .label("匯款")
+                                            .text("匯款")
+                                            .data("匯款")
+                                            .build())
                       .build();
         final Separator separators = Separator.builder().build();
         final Button messageAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("貨到付款", "貨到付款"))
+                      .action(PostbackAction.builder()
+                                            .label("貨到付款")
+                                            .text("貨到付款")
+                                            .data("貨到付款")
+                                            .build())
                       .build();
 
         return Box.builder()

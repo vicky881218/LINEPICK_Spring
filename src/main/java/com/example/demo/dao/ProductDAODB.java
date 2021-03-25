@@ -52,11 +52,10 @@ public class ProductDAODB implements ProductDAO{
    new ProductMapper(),product_name);
 }
 
-public List<Product> findOneProductAllSize(String product_style) {
-  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_style=?", 
-   new ProductMapper(),product_style);
+public List<Product> findOneProductAllSize(String product_style,String product_name) {
+  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_style=? and product_name=?", 
+   new ProductMapper(),product_style,product_name);
 }
-
 
  private static final class ProductMapper implements RowMapper<Product> {
 

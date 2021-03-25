@@ -27,10 +27,12 @@ import com.example.demo.entity.Buyer;
 public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
     private BuyerDAO buyerDAO;
     private String buyer_id;
+    private List<String> order;
 
-    public OrderInformationFlexMessage(BuyerDAO buyerDAO, String buyer_id) {
+    public OrderInformationFlexMessage(BuyerDAO buyerDAO, String buyer_id, List<String> order) {
         this.buyerDAO = buyerDAO;
         this.buyer_id = buyer_id;
+        this.order = order;
     }
 
     public List<Buyer> retrieveBuyers() throws SQLException{
@@ -38,7 +40,6 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
      }
 
      public Buyer retrieveOneBuyer() throws SQLException{
-        System.out.println("x");
         return buyerDAO.findOne(buyer_id);  
      }
 
@@ -46,6 +47,9 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
     @Override
     public FlexMessage get(){
         
+        System.out.println("here is information");
+        System.out.println(order);
+
         final Box footerBlock = createFooterBlock();
         final Box bodyBlock = createBodyBlock();
         final Bubble bubble =
@@ -55,7 +59,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                       .build();
         
 
-        return new FlexMessage("BuyerInformation", bubble);
+        return new FlexMessage("OrderInformation", bubble);
     }
 
     private Box createFooterBlock(){
@@ -91,24 +95,17 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
         }
         final Text title =
                 Text.builder()
-                    .text(buyer.getBuyerName() + "的購買資訊如下")
+                    .text(buyer.getBuyerName() + "的訂單資訊如下")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.LG)
                     .build();
 
         final Box info = createInfoBox();
 
-        final Text hint = 
-                Text.builder()
-                    .text("購買前，請先確認資料有無錯誤")
-                    .color("#ff6666")
-                    .weight(TextWeight.BOLD)
-                    .size(FlexFontSize.Md)
-                    .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
-                  .contents(asList(title,info,hint))
+                  .contents(asList(title,info))
                   .build();
     }
 
@@ -126,10 +123,10 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("姓名")
+                            .text("購買人姓名:")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
-                            .flex(2)
+                            .flex(4)
                             .build(),
                         Text.builder()
                             .text(buyer.getBuyerName())
@@ -146,10 +143,10 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
                            Text.builder()
-                               .text("聯絡電話")
+                               .text("購買人聯絡電話:")
                                .color("#aaaaaa")
                                .size(FlexFontSize.SM)
-                               .flex(2)
+                               .flex(4)
                                .build(),
                            Text.builder()
                                .text(buyer.getBuyerPhone())
@@ -166,10 +163,10 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                     .spacing(FlexMarginSize.SM)
                     .contents(asList(
                             Text.builder()
-                                .text("電子郵件")
+                                .text("購買人電子郵件:")
                                 .color("#aaaaaa")
                                 .size(FlexFontSize.SM)
-                                .flex(2)
+                                .flex(4)
                                 .build(),
                             Text.builder()
                                 .text(buyer.getBuyerMail())
@@ -186,13 +183,66 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                     .spacing(FlexMarginSize.SM)
                     .contents(asList(
                             Text.builder()
-                                .text("聯絡地址")
+                                .text("送達地址:")
                                 .color("#aaaaaa")
                                 .size(FlexFontSize.SM)
-                                .flex(2)
+                                .flex(4)
                                 .build(),
                             Text.builder()
                                 .text(buyer.getBuyerAddress())
+                                .wrap(true)
+                                .color("#666666")
+                                .size(FlexFontSize.SM)
+                                .flex(5)
+                                .build()
+                    ))
+                    .build();
+
+        final Box productDtail =
+                Box.builder()
+                    .layout(FlexLayout.BASELINE)
+                    .spacing(FlexMarginSize.SM)
+                    .contents(asList(
+                            Text.builder()
+                                .text("購買商品:")
+                                .color("#aaaaaa")
+                                .size(FlexFontSize.SM)
+                                .flex(4)
+                                .build(),
+                            Text.builder()
+                                .text(order.get(0)+" "+order.get(1)+" "+order.get(3))
+                                .wrap(true)
+                                .color("#666666")
+                                .size(FlexFontSize.SM)
+                                .flex(5)
+                                .build()
+                    ))
+                    .build();
+                    
+        final int pickmoney;
+        if(order.get(4).equals("Y")){
+            System.out.println("here is pickmoney");
+            
+            pickmoney=buyer.getPickmoney();
+            System.out.println(pickmoney);
+        }else{
+            pickmoney=0;
+            System.out.println("why here is pickmoney");
+        }
+
+        final Box totalPayment =
+                Box.builder()
+                    .layout(FlexLayout.BASELINE)
+                    .spacing(FlexMarginSize.SM)
+                    .contents(asList(
+                            Text.builder()
+                                .text("使用購物金:")
+                                .color("#aaaaaa")
+                                .size(FlexFontSize.SM)
+                                .flex(4)
+                                .build(),
+                            Text.builder()
+                                .text(""+pickmoney)
                                 .wrap(true)
                                 .color("#666666")
                                 .size(FlexFontSize.SM)
@@ -205,7 +255,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(name, phone, mail, address))
+                  .contents(asList(name, phone, mail, address,productDtail,totalPayment))
                   .build();
     }
 

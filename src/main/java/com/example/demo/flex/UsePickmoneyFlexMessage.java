@@ -1,6 +1,8 @@
 package com.example.demo.flex;
 import static java.util.Arrays.asList;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -20,11 +22,46 @@ import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
+import com.example.demo.dao.BuyerDAO;
+import com.example.demo.entity.Buyer;
+
 public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
+
+    private BuyerDAO buyerDAO;
+    private Buyer buyer;
+    private String buyer_id;
+
+    public UsePickmoneyFlexMessage(BuyerDAO buyerDAO, String buyer_id) {
+        this.buyerDAO = buyerDAO;
+        this.buyer_id = buyer_id;
+    }
+
+    public List<Buyer> retrieveBuyers() throws SQLException{
+        return buyerDAO.findAll();
+     }
+
+     public Buyer retrieveOneBuyer(String buyer_id) throws SQLException{
+        return buyerDAO.findOne(buyer_id);  
+     }
+
+     
     @Override
     public FlexMessage get(){
 
-        final Box bodyBlock = createBodyBlock();
+        System.out.println("here is buyer_id");
+        System.out.println(buyer_id);
+        Buyer buyer = new Buyer();
+
+        try {
+            buyer = retrieveOneBuyer(buyer_id);
+            System.out.println("here is buyer_id");
+            System.out.println(buyer.getPickmoney());
+        }
+        catch (SQLException e){
+            System.out.println(e);
+        }
+
+        final Box bodyBlock = createBodyBlock(buyer);
         final Box footerBlock = createFooterBlock();
         final Bubble bubble =
                 Bubble.builder()
@@ -45,7 +82,7 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
                 .action(PostbackAction.builder()
                         .label("是")
                         .text("使用購物金")
-                        .data("使用購物金")
+                        .data("Y")
                         .build())
                 .build();
         final Separator separator = Separator.builder().build();
@@ -55,8 +92,8 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
                       .height(ButtonHeight.SMALL)
                       .action(PostbackAction.builder()
                       .label("否")
-                      .text("不使用購物金")
-                      .data("不使用購物金")
+                      .text("N")
+                      .data("否")
                       .build())
                       .build();
 
@@ -67,10 +104,10 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
                   .build();
     }
 
-    private Box createBodyBlock() {
+    private Box createBodyBlock(Buyer buyer) {
         final Text title =
                 Text.builder()
-                    .text("是否使用購物金____?")
+                    .text("是否使用購物金"+buyer.getPickmoney()+"?")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.XL)
                     .build();

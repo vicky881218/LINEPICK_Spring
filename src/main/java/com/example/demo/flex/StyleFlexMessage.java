@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
@@ -42,16 +43,17 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
     private String product_name;
 
 
-    public StyleFlexMessage(ProductDAO productDAO) {
+    public StyleFlexMessage(ProductDAO productDAO,String product_name) {
         this.productDAO = productDAO;
+        this.product_name=product_name;
     }
 
     public List<Product> retrieveProducts() throws SQLException{
         return productDAO.findAll();
      }
 
-     public List<Product> retrieveOneProductsAllStyle() throws SQLException{
-        product_name = "背心";
+     public List<Product> retrieveOneProductsAllStyle(String product_name) throws SQLException{
+        //product_name = "背心";
         return productDAO.findOneProductAllStyle(product_name);
      }
 
@@ -76,7 +78,7 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
 
         try {
             product = retrieveOneProduct(product_id);         
-            productAllStyle = retrieveOneProductsAllStyle();
+            productAllStyle = retrieveOneProductsAllStyle(product_name);
         }
         catch (SQLException e){
             System.out.println("Error: "+e);
@@ -93,7 +95,7 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
                      .build();
 
         
-        final Box footerBlock = createFooterBlock();
+        final Box footerBlock = createFooterBlock(x);
         final Box bodyBlock = createBodyBlock(x);
 
         bubble.add(
@@ -111,7 +113,7 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
     }
 
 
-    private Box createFooterBlock(){
+    private Box createFooterBlock(Product x){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
 
         try {
@@ -124,14 +126,22 @@ public class StyleFlexMessage implements Supplier<FlexMessage> {
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("Pick", "顏色Pick"))
+                .action(PostbackAction.builder()
+                                      .label("Pick")
+                                      .text("Pick"+x.getProductName()+x.getProductStyle())
+                                      .data(x.getProductName()+" "+x.getProductStyle())
+                                      .build())
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("加入賴皮願望", "加入賴皮願望"))
+                      .action(PostbackAction.builder()
+                                            .label("加入賴皮願望")
+                                            .text("將"+x.getProductName()+"加入賴皮願望")
+                                            .data(x.getProductName())
+                                            .build())
                       .build();
 
         return Box.builder()
