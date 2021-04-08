@@ -87,6 +87,24 @@ public List<OrderList> findAllMyOrderList2(String orderlist_status, String buyer
   return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
    new OrderListMapper(),orderlist_status, buyer_id);
 }
+
+public List<OrderList> findTheLastOrderlistId(String buyer_id) {
+  return this.jdbcTemplate.query( "select * from orderlist where buyer_id=?", 
+   new OrderListMapper(), buyer_id);
+}
+
+public OrderList findTheLastRecordOfOrderlist(String buyer_id,int totalLength) {
+  return this.jdbcTemplate.queryForObject( "select * from orderlist where buyer_id=? and orderlist_id=?", 
+   new OrderListMapper(), buyer_id,totalLength);
+}
+
+public int insert(OrderList OrderList){ 
+  return jdbcTemplate.update(
+    "insert into orderlist (pay_type, pay_status, orderlist_status, orderlist_payment, buyer_id) values(?,?,?,?,?)",
+    OrderList.getPayType(), OrderList.getPayStatus(), OrderList.getOrderListStatus(),
+    OrderList.getOrderListPayment(), OrderList.getBuyerId());
+ }
+ 
  private static final class OrderListMapper implements RowMapper<OrderList> {
 
      public OrderList mapRow(ResultSet rs, int rowNum) throws SQLException {

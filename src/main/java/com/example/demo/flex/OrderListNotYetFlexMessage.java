@@ -136,12 +136,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
         catch (SQLException e){
             System.out.println("Error: "+e);
         }
-        final Button callAction = Button
-                .builder()
-                .style(ButtonStyle.LINK)
-                .height(ButtonHeight.SMALL)
-                .action(new MessageAction("Pick", "商品Pick"))
-                .build();
+        
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
@@ -153,7 +148,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, callAction, separator, websiteAction))
+                  .contents(asList(spacer, separator, websiteAction))
                   .build();
     }
 
@@ -214,7 +209,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
                         .flex(1)
                         .build(),
                 Text.builder()
-                        .text(""+z.getProductSize())
+                        .text("價格")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)

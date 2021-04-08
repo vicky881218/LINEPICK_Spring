@@ -39,7 +39,11 @@ public class OrderItemDAODB implements OrderItemDAO{
          new OrderItemMapper(), orderlist_id);
       }
    
-    
+      public int insert(OrderItem OrderItem){ 
+        return jdbcTemplate.update(
+          "insert into order_item (order_item_id, order_item_quantity, product_id, orderlist_id) values(?,?,?,?)",
+          OrderItem.getOrderItemId(),OrderItem.getOrderItemQuantity(),OrderItem.getProductId(),OrderItem.getOrderListId());
+       }    
 
     private static final class OrderItemMapper implements RowMapper<OrderItem> {
 

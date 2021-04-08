@@ -11,6 +11,7 @@ public interface TypeDAO {
     public List<Type> findAll();
     public List<Type> findSellerAll(int seller_id);
     public Type findOne(int type_id);
+    public Type findTypeId(String type_name);
     public int update(Type type);
     public int delete(int type_id);
 }

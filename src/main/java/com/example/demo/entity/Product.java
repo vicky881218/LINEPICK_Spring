@@ -8,7 +8,7 @@ public class Product {
     private int product_stock = 0;
     private String product_photo = "";
     private String product_style = "";
-    private String product_size = "";
+    
 
     public int getProductId(){
         return product_id;
@@ -66,11 +66,5 @@ public class Product {
         this.product_style=product_style;
     }
 
-    public String getProductSize(){
-        return product_size;
-    }
-
-    public void setProductSize(String product_size){
-        this.product_size=product_size;
-    }
+   
 }

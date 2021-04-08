@@ -71,6 +71,7 @@ public JdbcTemplate getJdbcTemplate() {
  }
 
  public int insert(Buyer Buyer) throws SQLException{
+   
   return jdbcTemplate.update(
     "insert into Buyer (buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney) values(?,?,?,?,?,?,?)",
     Buyer.getBuyerId(),Buyer.getBuyerName(), Buyer.getBuyerPhone(),Buyer.getBuyerMail(),

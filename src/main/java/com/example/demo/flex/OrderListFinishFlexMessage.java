@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.function.Supplier;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.FlexMessage;
@@ -110,7 +110,7 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                  AllOrderList = retrieveOrderProduct(product_id);
                  for(Product z : AllOrderList){
 
-        final Box footerBlock = createFooterBlock();
+        final Box footerBlock = createFooterBlock(z);
         final Box bodyBlock = createBodyBlock(z);
         bubble.add(
                 Bubble.builder()
@@ -126,7 +126,7 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
         return new FlexMessage("同分類商品", carousel);
      }
 
-    private Box createFooterBlock(){
+    private Box createFooterBlock(Product z){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
 
         try {
@@ -139,7 +139,11 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("Pick", "商品Pick"))
+                .action(PostbackAction.builder()
+                  .label("回購Pick")
+                  .text("Pick"+z.getProductName()+z.getProductStyle())
+                  .data(z.getProductName()+" "+z.getProductStyle())
+                  .build())
                 .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
@@ -207,13 +211,13 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
                         Text.builder()
-                        .text("價格")
+                        .text("規格")
                         .color("#aaaaaa")
                         .size(FlexFontSize.SM)
                         .flex(1)
                         .build(),
                 Text.builder()
-                        .text(""+z.getProductSize())
+                        .text("規格")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -228,13 +232,13 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
                            Text.builder()
-                               .text("折扣")
+                               .text("顏色")
                                .color("#aaaaaa")
                                .size(FlexFontSize.SM)
                                .flex(1)
                                .build(),
                            Text.builder()
-                               .text("8折")
+                               .text(""+z.getProductStyle())
                                .wrap(true)
                                .color("#666666")
                                .size(FlexFontSize.SM)

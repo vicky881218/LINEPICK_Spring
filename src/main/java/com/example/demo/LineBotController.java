@@ -6,6 +6,7 @@ import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ReplyDAO;
 import com.example.demo.dao.TypeDAO;
 import com.example.demo.dao.ProductDAO;
+import com.example.demo.dao.ProductTypeDAO;
 import com.example.demo.dao.OrderItemDAO;
 import com.example.demo.entity.Buyer;
 import com.example.demo.flex.*;
@@ -16,6 +17,7 @@ import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
 import com.linecorp.bot.model.event.message.StickerMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +54,8 @@ public class LineBotController {
     private ProductDAO productDAO;
     @Autowired
     private OrderItemDAO orderItemDAO;
+    @Autowired
+    private ProductTypeDAO productTypeDAO;
 
     private Buyer buyer;
 
@@ -74,10 +79,57 @@ public class LineBotController {
     private void replySticker(String replyToken, String packageId, String stickerId) {
         this.reply(replyToken, new StickerMessage(packageId, stickerId));
     }
-
+    List<String> order = new ArrayList<String>();
     @EventMapping
-    public void handleDefaultEvent(Event event) {
+    public void handleDefaultEvent(PostbackEvent event) {
         System.out.println("event: " + event);
+        System.out.println("event: " + event.getReplyToken());
+        System.out.println("data: " + event.getPostbackContent().getData());
+        String[] data= event.getPostbackContent().getData().split(" ");
+        String replyToken= event.getReplyToken();
+        
+        switch (data[data.length-1]){
+            case "白": case"灰": case"黑":
+            String product_name=data[0];
+            String product_style = data[1];
+            order.add(product_name);
+            order.add(product_style);
+          
+            // this.reply(replyToken, new StyleFlexMessage(productDAO,product_name).get());
+           this.replyText(replyToken, "請輸入購買數量");
+            break;
+
+            // case "黑":  case "白": case "紅":
+            // product_name=data[0];
+            // String product_style=data[1];
+            // order.add(product_style);
+            // this.replyText(replyToken, "請輸入購買數量");
+            // break;
+
+            case "Y":
+            String usePickmoney=data[0];
+            System.out.println(data);
+            order.add(usePickmoney);
+            this.reply(replyToken, new PaySelectionFlexMessage().get());
+            break;
+
+            case "N":
+            usePickmoney=data[0];
+            System.out.println(data);
+            order.add(usePickmoney);
+            this.reply(replyToken, new PaySelectionFlexMessage().get());
+            break;
+            case "LinePay": case "匯款": case "貨到付款":
+            String paymentChoice=data[0];
+            order.add(paymentChoice);
+            System.out.println("here is final");
+            System.out.println(order);
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new OrderInformationFlexMessage(buyerDAO, buyer_id, order, orderListDAO, orderItemDAO, productDAO).get());
+           order.clear();
+            break;
+            
+        }
     }
 
     private void reply(String replyToken, List<Message> messages) {
@@ -104,7 +156,13 @@ public class LineBotController {
 
     private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
         String text = content.getText();
-
+        String quantity = "^[0-9]";
+        if (text.matches(quantity)){
+            order.add(text);
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new UsePickmoneyFlexMessage(buyerDAO,buyer_id).get());
+        }
+        
         switch (text) {
         case "profile": { // 名字+個簽
             String buyer_id = event.getSource().getUserId();
@@ -123,6 +181,7 @@ public class LineBotController {
                 });
             }
             break;
+        
         }
 
         case "hi": { // 名字+歡迎光臨
@@ -138,6 +197,7 @@ public class LineBotController {
 
                 });
             }
+            
             break;
         }
 
@@ -145,6 +205,9 @@ public class LineBotController {
             this.replyText(replyToken, "hihihi!");
             break;
         }
+
+        
+       
 
         case "sticker": {// 貼圖
             this.replySticker(replyToken, "11539", "52114116");
@@ -162,6 +225,10 @@ public class LineBotController {
         case "flex": {
             String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new testFlexMessage(buyerDAO,buyer_id).get());
+            break;
+        }
+        case "分類": {
+            this.reply(replyToken, new TypeQuickReplyMessage(typeDAO).get());
             break;
         }
         case "賴皮客服": {
@@ -190,6 +257,7 @@ public class LineBotController {
             int product_id = 1;
             String orderlist_status = "已完成";
             this.reply(replyToken, new OrderListFinishFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            
             break;
         }
         case "未出貨": {
@@ -234,27 +302,39 @@ public class LineBotController {
             }
             break;
         }
-        case "我": {
+        case "註冊": {
             String buyer_id = event.getSource().getUserId();
             
-            try {
-                BuyerInformation buyer = new BuyerInformation(buyerDAO,text,buyer_id);
-                this.reply(replyToken,buyer.get());
+            if (buyer_id != null) {
+                lineMessagingClient.getProfile(buyer_id).whenComplete((profile, throwable) -> {
+                    if (throwable != null) {
+                        this.replyText(replyToken, throwable.getMessage());
+                        return;
+                    }
+                    String buyer_name = profile.getDisplayName();
+                    try {
+                        BuyerInformation buyer = new BuyerInformation(buyerDAO,buyer_name,buyer_id);
+                        this.reply(replyToken,buyer.get());
+                    }
+                    catch (DuplicateKeyException e){
+                        System.out.println("exists");
+                    }
+                    catch (SQLException e){
+                        System.out.println(e);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+
+                });
             }
-            catch (DuplicateKeyException e){
-                System.out.println("exists");
-            }
-            catch (SQLException e){
-                System.out.println(e);
-            }
-            catch (Exception e){
-                System.out.println(e);
-            }
+            
+            
             
             break;
         }
         default:
-            this.replyText(replyToken, text);
+          //  this.replyText(replyToken, text);
             break;
 
         } 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
@@ -29,105 +29,84 @@ import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
-import com.example.demo.dao.OrderItemDAO;
-import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.entity.Product;
-import com.example.demo.entity.OrderList;
-import com.example.demo.entity.OrderItem;
-public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
-    private OrderListDAO orderListDAO;
-    private OrderList orderList;
+
+public class StyleFlexMessage implements Supplier<FlexMessage> {
+ 
     private ProductDAO productDAO;
     private Product product;
+    private Product x;
+    private Product productAllStyle;
     private int product_id;
-    private OrderItemDAO orderItemDAO;
-    private OrderItem orderitem;
-    private String buyer_id;
-    private String orderlist_status;
-    private int orderlist_id;
+    private String product_style;
+    private String product_name;
 
-    public OrderListTransportFlexMessage(String buyer_id, int product_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO) {
-        this.buyer_id = buyer_id;
-        this.product_id = product_id;
-        this.orderlist_status = orderlist_status;
-        this.orderListDAO = orderListDAO;
+
+    public StyleFlexMessage(ProductDAO productDAO,String product_name) {
         this.productDAO = productDAO;
-        this.orderItemDAO = orderItemDAO;
+        this.product_name=product_name;
     }
-    public List<OrderList> retrieveOrderListId(String orderlist_status, String buyer_id) throws SQLException{
-       
-        return orderListDAO.findAllMyOrderList2(orderlist_status, buyer_id);  
+
+    public List<Product> retrieveProducts() throws SQLException{
+        return productDAO.findAll();
      }
 
-    public OrderList retrieveOrderListStatus(String orderlist_status) throws SQLException{
-       
-        return orderListDAO.findByOrderStatus2(orderlist_status);  
-     }
-     
-     public List<OrderItem> retrieveProductId(int orderlist_id) throws SQLException{
-       
-        return orderItemDAO.findProductId(orderlist_id);  
+     public List<Product> retrieveOneProductsAllStyle(String product_name) throws SQLException{
+        //product_name = "背心";
+        return productDAO.findOneProductAllStyle(product_name);
      }
 
      public Product retrieveOneProduct(int product_id) throws SQLException{
-      // product_id = 1;
-        return productDAO.findOne(product_id); 
+        product_id = 1;
+        // System.out.println("here");
+        // System.out.println(productDAO);
+        Product p = productDAO.findOne(product_id);
+        // System.out.println(p);
+        // System.out.println(productDAO.findOne(product_id));
+
+        return p;  
      }
-    
-     public List<Product> retrieveOrderProduct(int product_id) throws SQLException{
-         return productDAO.findOrderProduct(product_id);
-     }
-    
+
 
     @Override
     public FlexMessage get(){
-        
-        List<OrderList> orderListId = new ArrayList<>();
-        List<OrderItem> productId = new ArrayList<>();
-        List<Product> AllOrderList = new ArrayList<>();
 
+        List<Product> productAllStyle = new ArrayList<>();
         List<FlexMessage> flex = new ArrayList<>();
         List<Bubble> bubble = new ArrayList<>();
-        
-        try {
-            OrderList orderListStatus = retrieveOrderListStatus(orderlist_status);
-            orderlist_status = orderListStatus.getOrderListStatus();
-            orderListId = retrieveOrderListId(orderlist_status, buyer_id);
-            
-            product = retrieveOneProduct(product_id);
-            
-    
-        for(OrderList x : orderListId){  
-             
-             orderlist_id = x.getOrderListId();
-             
-             productId = retrieveProductId(orderlist_id);
-             
-             
-             for(OrderItem y: productId){
-                 product_id = y.getProductId();
-                 AllOrderList = retrieveOrderProduct(product_id);
-                 for(Product z : AllOrderList){
 
-        final Box footerBlock = createFooterBlock();
-        final Box bodyBlock = createBodyBlock(z);
-       
+        try {
+            product = retrieveOneProduct(product_id);         
+            productAllStyle = retrieveOneProductsAllStyle(product_name);
+        }
+        catch (SQLException e){
+            System.out.println("Error: "+e);
+        }
+
+        for(Product x : productAllStyle){
+              
+        
+
+        
+        final Box footerBlock = createFooterBlock(x);
+        final Box bodyBlock = createBodyBlock(x);
+
         bubble.add(
                 Bubble.builder()
                       .body(bodyBlock)
                       .footer(footerBlock)
                       .build());
-        }}}}catch (SQLException e){
-            System.out.println("Error: "+e);
-            }
-    
+        }
+
         final Carousel carousel = Carousel.builder().contents(bubble).build();
 
-        return new FlexMessage("同分類商品", carousel);
-     }
+        return new FlexMessage("ColorFlex", carousel);
+        
+    }
 
-    private Box createFooterBlock(){
+
+    private Box createFooterBlock(Product x){
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
 
         try {
@@ -136,87 +115,77 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
         catch (SQLException e){
             System.out.println("Error: "+e);
         }
-        
+        final Button callAction = Button
+                .builder()
+                .style(ButtonStyle.LINK)
+                .height(ButtonHeight.SMALL)
+                .action(PostbackAction.builder()
+                                      .label("Pick")
+                                      .text("Pick"+x.getProductName()+x.getProductStyle())
+                                      .data(x.getProductName()+" "+x.getProductStyle())
+                                      .build())
+                .build();
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("加入賴皮願望", "加入賴皮願望"))
+                      .action(PostbackAction.builder()
+                                            .label("加入賴皮願望")
+                                            .text("將"+x.getProductName()+"加入賴皮願望")
+                                            .data(x.getProductName())
+                                            .build())
                       .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, separator, websiteAction))
+                  .contents(asList(spacer, callAction, separator, websiteAction))
                   .build();
     }
 
-    private Box createBodyBlock(Product z) {
+    private Box createBodyBlock(Product x) {
+        System.out.println("in for try productstyle");
+        System.out.println(x);
+        System.out.println(product);
+
         final Text title =
                 Text.builder()
-                    .text(z.getProductName())
+                    .text(x.getProductStyle())
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.XL)
                     .build();
 
-        final Box info = createInfoBox(z);
-        
+
+        final Box info = createInfoBox(x);
+
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .contents(asList(title,info))
                   .build();
     }
 
-    private Box createInfoBox(Product z) {
-        final Box desc = Box
+    private Box createInfoBox(Product x) {
+        final Box place = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("商品介紹:")
+                            .text("價格")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
-                            .build()
-                ))
-                .build();
-                final Box descDetail = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
+                            .build(),
                         Text.builder()
-                            .text(z.getProductDesc())
-                            .color("#aaaaaa")
+                            .text(""+x.getProductPrice())
+                            .wrap(true)
+                            .color("#666666")
                             .size(FlexFontSize.SM)
-                            .flex(1)
+                            .flex(5)
                             .build()
                 ))
                 .build();
-
-        final Box place =
-                Box.builder()
-                   .layout(FlexLayout.BASELINE)
-                   .spacing(FlexMarginSize.SM)
-                   .contents(asList(
-                        Text.builder()
-                        .text("價格")
-                        .color("#aaaaaa")
-                        .size(FlexFontSize.SM)
-                        .flex(1)
-                        .build(),
-                Text.builder()
-                        .text(""+z.getProductPrice())
-                        .wrap(true)
-                        .color("#666666")
-                        .size(FlexFontSize.SM)
-                        .flex(5)
-                        .build()
-                   ))
-                   .build();
-
         final Box time =
                 Box.builder()
                    .layout(FlexLayout.BASELINE)
@@ -242,8 +211,8 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(desc,descDetail,place,time))
+                  .contents(asList(place, time))
                   .build();
     }
-
+    
 }

@@ -17,15 +17,15 @@ public class BuyerInformation implements Supplier<TextMessage>{
     
     @Autowired
 
-    public BuyerInformation(BuyerDAO buyerDAO,String text, String buyerId) throws SQLException {
+    public BuyerInformation(BuyerDAO buyerDAO,String buyer_name, String buyerId) throws SQLException {
         this.buyerDAO = buyerDAO;
         buyer = new Buyer();
         buyer.setBuyerId(buyerId);
         System.out.println("here is buyer_id");
         System.out.println(buyerId);
-        buyer.setBuyerName(text);
+        buyer.setBuyerName(buyer_name);
         System.out.println("here is text");
-        System.out.println(text);
+        System.out.println(buyer_name);
         System.out.println(buyerDAO);
         buyerDAO.insert(buyer);
         
@@ -39,7 +39,8 @@ public class BuyerInformation implements Supplier<TextMessage>{
     @Override
     public TextMessage get() {
         final Text text1 = Text.builder().text("userId:").text(buyer.getBuyerId()).build();
-        return new TextMessage(text1.toString());
+        //System.out.println(); 
+        return new TextMessage(buyer.getBuyerName()+"，註冊成功~");
     }
 
 
