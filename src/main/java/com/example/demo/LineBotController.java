@@ -1,9 +1,12 @@
 package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
+import com.example.demo.dao.OrderItemDAO;
+import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.ProductTypeDAO;
 import com.example.demo.dao.TypeDAO;
+import com.example.demo.entity.Product;
 import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
 import com.linecorp.bot.client.LineMessagingClient;
@@ -23,6 +26,9 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,6 +40,7 @@ import java.util.concurrent.ExecutionException;
 
 @LineMessageHandler
 public class LineBotController {
+    final boolean DEBUG = true;
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
@@ -45,6 +52,12 @@ public class LineBotController {
     private ProductTypeDAO productTypeDAO;
     @Autowired
     private TypeDAO typeDAO;
+    @Autowired
+    private OrderListDAO orderListDAO;
+    @Autowired
+    private OrderItemDAO orderItemDAO;
+
+
 
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -69,6 +82,8 @@ public class LineBotController {
 
     List<String> order = new ArrayList<String>();
 
+
+
     @EventMapping
     public void handleDefaultEvent(PostbackEvent event) {
         System.out.println("event: " + event);
@@ -78,27 +93,36 @@ public class LineBotController {
         String replyToken= event.getReplyToken();
         //List<String> order = new ArrayList<String>();
         //order.clear();
+        if (DEBUG){
+            for (int i=0; i< data.length; i++) {
+                System.out.println("begin data:"+data[i]);
+            }
+        }
 
         switch (data[data.length-1]){
             case "上衣": case "褲裝":
+            if (DEBUG){System.out.println("in 上衣");}
             String type_name=data[0];
             this.reply(replyToken, new ProductFlexMessage(typeDAO,productDAO, productTypeDAO,type_name).get());
             break;
 
             case "背心": case "碎花裙":
+            if (DEBUG){System.out.println("in 背心");}
             String product_name=data[0];
             order.add(product_name);
             this.reply(replyToken, new StyleFlexMessage(productDAO,product_name).get());
             break;
 
             case "黑":  case "白": case "紅":
+            if (DEBUG){System.out.println("in 黑");}
             product_name=data[0];
             String product_style=data[1];
             order.add(product_style);
-            this.reply(replyToken, new SizeFlexMessage(productDAO,product_style,product_name).get());
+            // this.reply(replyToken, new SizeFlexMessage(productDAO,product_style,product_name).get());
             break;
 
             case "S":  case "M": case "L":
+            if (DEBUG){System.out.println("in size");}
             product_name=data[0];
             product_style=data[1];
             String product_size=data[2];
@@ -107,26 +131,35 @@ public class LineBotController {
             break;
             
             case "Y":
+            if (DEBUG){System.out.println("in Y");}
                 String usePickmoney=data[0];
-                System.out.println(data);
+                if (DEBUG){
+                    System.out.println("in Y usePickmoney"+usePickmoney);
+                    System.out.println(data);
+                }
                 order.add(usePickmoney);
                 this.reply(replyToken, new PaySelectionFlexMessage().get());
                 break;
 
             case "N":
+            if (DEBUG){System.out.println("in N");}
                 usePickmoney=data[0];
-                System.out.println(data);
+                if (DEBUG) {System.out.println("data:"+data[0]);}
                 order.add(usePickmoney);
                 this.reply(replyToken, new PaySelectionFlexMessage().get());
                 break;
 
             case "LinePay": case "匯款": case "貨到付款":
+                if (DEBUG){System.out.println("in LinePay");}
                 String paymentChoice=data[0];
                 order.add(paymentChoice);
                 System.out.println("here is final");
                 System.out.println(order);
                 String buyer_id = event.getSource().getUserId();
-                this.reply(replyToken, new OrderInformationFlexMessage(buyerDAO, buyer_id,order).get());
+                this.reply(replyToken, new OrderInformationFlexMessage(orderListDAO,orderItemDAO,buyerDAO, buyer_id,order,productDAO).get());
+            break;
+            default:
+            if (DEBUG){System.out.println("in postback default:"+data[data.length-1]);}
             break;
         
         }
@@ -160,6 +193,7 @@ public class LineBotController {
     private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
         String text = content.getText();
         String quantity = "^[0-9]";
+        if (DEBUG){System.out.println("text:"+text);}
         if (text.matches(quantity)){
             order.add(text);
             String buyer_id = event.getSource().getUserId();
@@ -223,6 +257,7 @@ public class LineBotController {
         }
 
         case "分類": {
+            order.clear();
             this.reply(replyToken, new TypeQuickReplyMessage(typeDAO).get());
             break;
         }
@@ -280,7 +315,8 @@ public class LineBotController {
         }
 
         default:
-            //this.replyText(replyToken, text);
+            //this.replyText(replyToken, "Sorry!");
+            if (DEBUG){System.out.println("order in default:"+order);}
             break;
 
         }

@@ -1,7 +1,7 @@
 package com.example.demo.dao;
 
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,12 +34,6 @@ public JdbcTemplate getJdbcTemplate() {
 
 //jdbcTemplate  
  public Buyer findOne(String buyer_id) {
-   try {
-   Connection connection = dataSource.getConnection();
-   }
-   catch (Exception e){
-     System.out.println("Error in findOne:"+e);
-   }
    Buyer aBuyer = jdbcTemplate.queryForObject( 
     "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer where buyer_id = ?", 
     new BuyerMapper(), buyer_id);

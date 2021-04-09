@@ -101,24 +101,23 @@ public class ProductFlexMessage implements Supplier<FlexMessage> {
 
             for(ProductType x : oneTypeProductId){
                 product_id=x.getProductId();
-                // System.out.println("in for");
-                // System.out.println(product_id);
+                System.out.println("in for");
+                System.out.println(product_id);
                 oneTypeProductName=retrievefindOneTypeAllProduct(product_id);
-                // System.out.println("after");
-                // System.out.println(oneTypeProductName);
+                System.out.println("after");
+                System.out.println(oneTypeProductName);
                 for(Product y : oneTypeProductName){
                     String product_name=y.getProductName();
                     if(oneTypeProductDistinctName.contains(product_name)){
                         //System.out.println("exist");
                     }else{
-                        // System.out.println("!!!try!!!");
-                        // System.out.println(product_name);
                         oneTypeProductDistinctName.add(product_name);
-                        //System.out.println(oneTypeProductDistinctName);
+                        System.out.println("DistinctName");
+                        System.out.println(oneTypeProductDistinctName);
                         fineOneProductByName = retrievefindOneByName(product_name);
 
-                        // System.out.println("fineOneProductByName");
-                        // System.out.println(fineOneProductByName);
+                        System.out.println("fineOneProductByName");
+                        System.out.println(fineOneProductByName);
                     
 
         for(Product z : fineOneProductByName){

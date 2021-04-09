@@ -38,6 +38,7 @@ public class TypeQuickReplyMessage implements Supplier<Message> {
         try {
             alltype = retrieveSellerAllType();            
         } catch (SQLException e) {
+            System.out.println("in TypeQuickReplyMessage");
             System.out.println(e);
         }
         
