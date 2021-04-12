@@ -137,18 +137,13 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
             System.out.println("Error: "+e);
         }
         
-        final Separator separator = Separator.builder().build();
-        final Button websiteAction =
-                Button.builder()
-                      .style(ButtonStyle.LINK)
-                      .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("加入賴皮願望", "加入賴皮願望"))
-                      .build();
+        //final Separator separator = Separator.builder().build();
+        
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, separator, websiteAction))
+                  .contents(asList(spacer))
                   .build();
     }
 
@@ -175,7 +170,7 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("商品介紹:")
+                            .text("商品規格:")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
@@ -188,7 +183,7 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text(z.getProductDesc())
+                            .text(z.getProductStyle())
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
@@ -208,7 +203,7 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                         .flex(1)
                         .build(),
                 Text.builder()
-                        .text(""+z.getProductPrice())
+                        .text(""+z.getProductPrice()+"元")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -217,32 +212,13 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                    ))
                    .build();
 
-        final Box time =
-                Box.builder()
-                   .layout(FlexLayout.BASELINE)
-                   .spacing(FlexMarginSize.SM)
-                   .contents(asList(
-                           Text.builder()
-                               .text("折扣")
-                               .color("#aaaaaa")
-                               .size(FlexFontSize.SM)
-                               .flex(1)
-                               .build(),
-                           Text.builder()
-                               .text("8折")
-                               .wrap(true)
-                               .color("#666666")
-                               .size(FlexFontSize.SM)
-                               .flex(5)
-                               .build()
-                   ))
-                   .build();
+      
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(desc,descDetail,place,time))
+                  .contents(asList(desc,descDetail,place))
                   .build();
     }
 

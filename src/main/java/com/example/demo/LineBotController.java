@@ -13,6 +13,7 @@ import com.example.demo.flex.*;
 import com.example.demo.replyTextMessage.BuyerInformation;
 import com.example.demo.replyTextMessage.ExchangePickMoney;
 import com.example.demo.replyTextMessage.ExchangePickMoneyAll;
+import com.example.demo.replyTextMessage.WelcomeInformation;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
@@ -89,7 +90,7 @@ public class LineBotController {
         String replyToken= event.getReplyToken();
         
         switch (data[data.length-1]){
-            case "白": case"灰": case"黑":
+            case "黑巧克力(24入)": case"白巧克力(24入)": case"雙層玻璃杯": case"不鏽鋼胖胖杯": case "陶瓷變色馬克杯": case "綠茶洗面乳80ml": case "火山泥洗面乳70ml":
             String product_name=data[0];
             String product_style = data[1];
             order.add(product_name);
@@ -164,76 +165,11 @@ public class LineBotController {
         }
         
         switch (text) {
-        case "profile": { // 名字+個簽
-            String buyer_id = event.getSource().getUserId();
-            if (buyer_id != null) {
-                lineMessagingClient.getProfile(buyer_id).whenComplete((profile, throwable) -> {
-                    if (throwable != null) {
-                        this.replyText(replyToken, throwable.getMessage());
-                        return;
-                    }
-
-                    this.reply(replyToken,
-                            Arrays.asList(new TextMessage("Display name: " + profile.getDisplayName()),
-                                    new TextMessage("Status message: " + profile.getStatusMessage()),
-                                    new TextMessage("userId: " + buyer_id)));
-
-                });
-            }
-            break;
-        
-        }
-
-        case "hi": { // 名字+歡迎光臨
-            String userId = event.getSource().getUserId();
-            if (userId != null) {
-                lineMessagingClient.getProfile(userId).whenComplete((profile, throwable) -> {
-                    if (throwable != null) {
-                        this.replyText(replyToken, throwable.getMessage());
-                        return;
-                    }
-
-                    this.reply(replyToken, Arrays.asList(new TextMessage(profile.getDisplayName() + "歡迎光臨")));
-
-                });
-            }
-            
-            break;
-        }
-
-        case "hello": {// 限定回覆字
-            this.replyText(replyToken, "hihihi!");
-            break;
-        }
-
-        
-       
-
-        case "sticker": {// 貼圖
-            this.replySticker(replyToken, "11539", "52114116");
-            break;
-        }
-
-        case "quickreply": {
-            this.reply(replyToken, new QuickReplyMessage().get());
-            break;
-        }
-        case "type": {
-            this.reply(replyToken, new TypeQuickReplyMessage(typeDAO).get());
-            break;
-        }
-        case "flex": {
-            String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new testFlexMessage(buyerDAO,buyer_id).get());
-            break;
-        }
-        case "分類": {
-            this.reply(replyToken, new TypeQuickReplyMessage(typeDAO).get());
-            break;
-        }
         case "賴皮客服": {
             int seller_id=1;
+            //this.reply(replyToken, new WelcomeInformation().get());
             this.reply(replyToken, new QAFlexMessage(replyDAO,seller_id).get());
+            //this.replyText(replyToken, "若以上無您所想問的問題與答案，請直接傳送訊息，稍後會有專人為您服務~");
             break;
         }
         case "賴皮指數": {
@@ -318,6 +254,7 @@ public class LineBotController {
                     }
                     catch (DuplicateKeyException e){
                         System.out.println("exists");
+                        this.replyText(replyToken,buyer_name+"，您已經註冊過囉!");
                     }
                     catch (SQLException e){
                         System.out.println(e);

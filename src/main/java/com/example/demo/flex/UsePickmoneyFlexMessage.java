@@ -107,14 +107,20 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
     private Box createBodyBlock(Buyer buyer) {
         final Text title =
                 Text.builder()
-                    .text("是否使用購物金"+buyer.getPickmoney()+"?")
+                    .text("目前您的購物金有"+buyer.getPickmoney()+"元")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.XL)
+                    .build();
+        final Text title1 =
+                Text.builder()
+                    .text("是否使用")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.XL)
                     .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
-                  .contents(title)
+                  .contents(title, title1)
                   .build();
     }
 }

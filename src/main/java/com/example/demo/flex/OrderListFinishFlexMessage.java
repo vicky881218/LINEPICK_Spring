@@ -146,17 +146,12 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                   .build())
                 .build();
         final Separator separator = Separator.builder().build();
-        final Button websiteAction =
-                Button.builder()
-                      .style(ButtonStyle.LINK)
-                      .height(ButtonHeight.SMALL)
-                      .action(new MessageAction("加入賴皮願望", "加入賴皮願望"))
-                      .build();
+        
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, callAction, separator, websiteAction))
+                  .contents(asList(spacer,separator, callAction))
                   .build();
     }
 
@@ -184,47 +179,16 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("商品介紹:")
+                            .text("商品價格:"+z.getProductPrice()+"元")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
                             .build()
                 ))
                 .build();
-                final Box descDetail = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
-                        Text.builder()
-                            .text(z.getProductDesc())
-                            .color("#aaaaaa")
-                            .size(FlexFontSize.SM)
-                            .flex(1)
-                            .build()
-                ))
-                .build();
+                
 
-        final Box place =
-                Box.builder()
-                   .layout(FlexLayout.BASELINE)
-                   .spacing(FlexMarginSize.SM)
-                   .contents(asList(
-                        Text.builder()
-                        .text("規格")
-                        .color("#aaaaaa")
-                        .size(FlexFontSize.SM)
-                        .flex(1)
-                        .build(),
-                Text.builder()
-                        .text("規格")
-                        .wrap(true)
-                        .color("#666666")
-                        .size(FlexFontSize.SM)
-                        .flex(5)
-                        .build()
-                   ))
-                   .build();
+     
 
         final Box time =
                 Box.builder()
@@ -232,7 +196,7 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
                            Text.builder()
-                               .text("顏色")
+                               .text("規格:")
                                .color("#aaaaaa")
                                .size(FlexFontSize.SM)
                                .flex(1)
@@ -251,7 +215,7 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(desc,descDetail,place,time))
+                  .contents(asList(desc,time))
                   .build();
     }
 
