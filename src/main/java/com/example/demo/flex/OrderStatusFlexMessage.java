@@ -86,7 +86,7 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("已出貨","運送中"))
+                .action(new MessageAction("已出貨","已出貨"))
                 .build();
        
 

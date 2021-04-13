@@ -131,7 +131,7 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
     
         final Carousel carousel = Carousel.builder().contents(bubble).build();
 
-        return new FlexMessage("運送中訂單", carousel);
+        return new FlexMessage("已出貨訂單", carousel);
      }
 
     private Box createFooterBlock(){

@@ -106,22 +106,15 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
             OrderList orderListStatus = retrieveOrderListStatus(orderlist_status);
             orderlist_status = orderListStatus.getOrderListStatus();
             orderListId = retrieveOrderListId(orderlist_status, buyer_id);
-            
             product = retrieveOneProduct(product_id);
-            
     
         for(OrderList x : orderListId){  
-             
              orderlist_id = x.getOrderListId();
-             
              productId = retrieveProductId(orderlist_id);
-             
-             
              for(OrderItem y: productId){
                  product_id = y.getProductId();
                  AllOrderList = retrieveOrderProduct(product_id);
-                 for(Product z : AllOrderList){
-
+                 for(Product z : AllOrderList){       
         final Box footerBlock = createFooterBlock(z);
         final Box bodyBlock = createBodyBlock(z,y,x);
       //  final Box info = createInfoBox(z,y);

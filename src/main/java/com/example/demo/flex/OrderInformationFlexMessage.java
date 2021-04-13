@@ -117,13 +117,12 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
             orderlistLastRecord = retrievefindTheLastRecordOfOrderlist(buyer_id,totalLength);
             System.out.println("find orderlistLastRecord");
             System.out.println(orderlistLastRecord.getOrderListId());
-            // productStock=retrieveThidProductStock(product.getProductId());
+    
         }
         catch (SQLException e){
             System.out.println(e);
         }   
-        // productStock.setProductStock(productStock.getProductStock()-Integer.valueOf(order.get(2)));
-        // productDAO.update(productStock);
+        
         product.setProductStock(product.getProductStock()-Integer.valueOf(order.get(2)));
         productDAO.update(product);
 

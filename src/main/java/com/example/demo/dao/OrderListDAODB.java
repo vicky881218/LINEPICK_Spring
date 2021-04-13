@@ -44,9 +44,7 @@ public class OrderListDAODB implements OrderListDAO{
   OrderList anOrderList = jdbcTemplate.queryForObject( 
     "select * from orderlist where orderlist_status = ? group by orderlist_status", 
     new OrderListMapper(), orderlist_status);
-    
   return anOrderList;
-   
 }
 public OrderList findByOrderStatus1(String orderlist_status) {
  orderlist_status = "未出貨";
