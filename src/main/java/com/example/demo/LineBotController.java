@@ -166,10 +166,23 @@ public class LineBotController {
         
         switch (text) {
         case "賴皮客服": {
-            int seller_id=1;
-            //this.reply(replyToken, new WelcomeInformation().get());
-            this.reply(replyToken, new QAFlexMessage(replyDAO,seller_id).get());
-            //this.replyText(replyToken, "若以上無您所想問的問題與答案，請直接傳送訊息，稍後會有專人為您服務~");
+            this.reply(replyToken, new QAFlexMessage().get());  
+            break;
+        }
+        case "圖文選單導覽":{
+            this.reply(replyToken, new WelcomeInformation().get());
+            break;
+        }
+        case "如何退貨":{
+            this.replyText(replyToken, "請撥打02-12345678詢問詳細事項");
+            break;
+        }
+        case "下單後過多久出貨":{
+            this.replyText(replyToken, "一般來說7個工作天內出貨");
+            break;
+        }
+        case "以上問題沒有您所想問的嗎":{
+            this.replyText(replyToken, "請直接傳送訊息等待專人為您服務");
             break;
         }
         case "賴皮指數": {
@@ -192,7 +205,7 @@ public class LineBotController {
             String buyer_id = event.getSource().getUserId();
             int product_id = 1;
             String orderlist_status = "已完成";
-            this.reply(replyToken, new OrderListFinishFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            this.reply(replyToken, new OrderListFinishFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO, buyerDAO).get());
             
             break;
         }
@@ -200,14 +213,14 @@ public class LineBotController {
             String buyer_id = event.getSource().getUserId();
             int product_id = 1;
             String orderlist_status = "未出貨";
-            this.reply(replyToken, new OrderListNotYetFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            this.reply(replyToken, new OrderListNotYetFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO, buyerDAO).get());
             break;
         }
         case "運送中": {
             String buyer_id = event.getSource().getUserId();
             int product_id = 1;
             String orderlist_status = "運送中";
-            this.reply(replyToken, new OrderListTransportFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO).get());
+            this.reply(replyToken, new OrderListTransportFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO, buyerDAO).get());
             break;
         }
         case "兌換全部":{

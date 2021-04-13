@@ -28,12 +28,13 @@ import com.linecorp.bot.model.message.flex.container.Carousel;
 import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
-
+import com.example.demo.dao.BuyerDAO;
 import com.example.demo.dao.OrderItemDAO;
 import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.OrderList;
+import com.example.demo.entity.Buyer;
 import com.example.demo.entity.OrderItem;
 
 public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
@@ -47,15 +48,21 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
     private String buyer_id;
     private String orderlist_status;
     private int orderlist_id;
-
-    public OrderListNotYetFlexMessage(String buyer_id, int product_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO) {
+    private BuyerDAO buyerDAO;
+    private Buyer buyer;
+    public OrderListNotYetFlexMessage(String buyer_id, int product_id, String orderlist_status, OrderListDAO orderListDAO, ProductDAO productDAO, OrderItemDAO orderItemDAO, BuyerDAO buyerDAO) {
         this.buyer_id = buyer_id;
         this.product_id = product_id;
         this.orderlist_status = orderlist_status;
         this.orderListDAO = orderListDAO;
         this.productDAO = productDAO;
         this.orderItemDAO = orderItemDAO;
+        this.buyerDAO = buyerDAO;
     }
+    public Buyer retrieveOneBuyer(String buyer_id) throws SQLException{
+        
+        return buyerDAO.findOne(buyer_id);  
+     }
     public List<OrderList> retrieveOrderListId(String orderlist_status, String buyer_id) throws SQLException{
        
         return orderListDAO.findAllMyOrderList1(orderlist_status, buyer_id);  
@@ -112,7 +119,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
                  for(Product z : AllOrderList){
 
         final Box footerBlock = createFooterBlock();
-        final Box bodyBlock = createBodyBlock(z);
+        final Box bodyBlock = createBodyBlock(z, y, x);
         bubble.add(
                 Bubble.builder()
                       .body(bodyBlock)
@@ -124,7 +131,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
     
         final Carousel carousel = Carousel.builder().contents(bubble).build();
 
-        return new FlexMessage("同分類商品", carousel);
+        return new FlexMessage("未出貨訂單", carousel);
      }
 
     private Box createFooterBlock(){
@@ -147,7 +154,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
                   .build();
     }
 
-    private Box createBodyBlock(Product z) {
+    private Box createBodyBlock(Product z, OrderItem y, OrderList x) {
         final Text title =
                 Text.builder()
                     .text(z.getProductName())
@@ -156,7 +163,7 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
                     .build();
 
 
-        final Box info = createInfoBox(z);
+        final Box info = createInfoBox(z, y, x);
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
@@ -164,62 +171,142 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
                   .build();
     }
 
-    private Box createInfoBox(Product z) {
-        final Box desc = Box
+    private Box createInfoBox(Product z, OrderItem y, OrderList x) {
+        Buyer buyer = new Buyer();
+        try {
+            buyer = retrieveOneBuyer(buyer_id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final int totalPrice = z.getProductPrice()*y.getOrderItemQuantity();
+        final Box name = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("商品規格:")
+                            .text("姓名:"+buyer.getBuyerName())
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
                             .build()
                 ))
                 .build();
-                final Box descDetail = Box
+        final Box address = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text(z.getProductStyle())
+                            .text("地址:"+buyer.getBuyerAddress())
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
                             .build()
                 ))
                 .build();
-
-        final Box place =
+        final Box email = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text("電子郵件:"+buyer.getBuyerMail())
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build();
+        
+        final Box phonenum = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text("電話:"+buyer.getBuyerPhone())
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build();
+        final Box aprice = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text("單價:"+z.getProductPrice()+"元")
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build();
+        final Box price = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text("總金額:"+totalPrice+"元")
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build();
+        final Box quantity = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text("購買數量:"+y.getOrderItemQuantity()+"個")
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build(); 
+        final Box payselection =
                 Box.builder()
                    .layout(FlexLayout.BASELINE)
                    .spacing(FlexMarginSize.SM)
                    .contents(asList(
-                        Text.builder()
-                        .text("價格")
-                        .color("#aaaaaa")
-                        .size(FlexFontSize.SM)
-                        .flex(1)
-                        .build(),
-                Text.builder()
-                        .text(""+z.getProductPrice()+"元")
-                        .wrap(true)
-                        .color("#666666")
-                        .size(FlexFontSize.SM)
-                        .flex(5)
-                        .build()
+                           Text.builder()
+                               .text("付款方式:"+x.getPayType())
+                               .color("#aaaaaa")
+                               .size(FlexFontSize.SM)
+                               .flex(1)
+                               .build()
+                         
                    ))
                    .build();
-
      
+
+        final Box style =
+                Box.builder()
+                   .layout(FlexLayout.BASELINE)
+                   .spacing(FlexMarginSize.SM)
+                   .contents(asList(
+                           Text.builder()
+                               .text("規格:"+z.getProductStyle())
+                               .color("#aaaaaa")
+                               .size(FlexFontSize.SM)
+                               .flex(1)
+                               .build()
+                         
+                   ))
+                   .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(desc,descDetail,place))
+                  .contents(asList(name, phonenum, address, email, aprice, price,quantity, style, payselection))
                   .build();
     }
 

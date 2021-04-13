@@ -75,7 +75,7 @@ public class PickMoneyFlexMessage implements Supplier<FlexMessage> {
                       .build();
         
 
-        return new FlexMessage("ALT", bubble);
+        return new FlexMessage("兌換購物金", bubble);
     }
 
     private Box createFooterBlock(){

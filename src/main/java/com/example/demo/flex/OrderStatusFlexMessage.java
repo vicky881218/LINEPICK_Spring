@@ -62,7 +62,7 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
                       .build();
         
 
-        return new FlexMessage("ALT", bubble);
+        return new FlexMessage("賴皮紀錄查詢", bubble);
     }
 
     private Box createFooterBlock(){

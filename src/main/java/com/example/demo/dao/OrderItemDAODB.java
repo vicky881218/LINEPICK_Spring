@@ -38,6 +38,12 @@ public class OrderItemDAODB implements OrderItemDAO{
         return this.jdbcTemplate.query( "select * from order_item where orderlist_id=?", 
          new OrderItemMapper(), orderlist_id);
       }
+    public OrderItem findOneOrderItemQuantity(int orderlist_id) {
+        OrderItem aOrderItem = jdbcTemplate.queryForObject(
+                "select order_item_id, order_item_quantity, product_id, orderlist_id from order_item where orderlist_id = ?",
+                new OrderItemMapper(), orderlist_id);
+                return aOrderItem;
+     }
    
       public int insert(OrderItem OrderItem){ 
         return jdbcTemplate.update(
@@ -50,7 +56,7 @@ public class OrderItemDAODB implements OrderItemDAO{
         public OrderItem mapRow(ResultSet rs, int rowNum) throws SQLException {
             OrderItem OrderItem = new OrderItem();
             OrderItem.setOrderItemId(rs.getInt("order_item_id"));
-            OrderItem.setOrderItemQuantity(rs.getString("order_item_quantity"));
+            OrderItem.setOrderItemQuantity(rs.getInt("order_item_quantity"));
             OrderItem.setProductId(rs.getInt("product_id"));
             OrderItem.setOrderListId(rs.getInt("orderlist_id"));
             return OrderItem;

@@ -92,7 +92,7 @@ public class UsePickmoneyFlexMessage implements Supplier<FlexMessage>{
                       .height(ButtonHeight.SMALL)
                       .action(PostbackAction.builder()
                       .label("否")
-                      .text("N")
+                      .text("不使用")
                       .data("N")
                       .build())
                       .build();

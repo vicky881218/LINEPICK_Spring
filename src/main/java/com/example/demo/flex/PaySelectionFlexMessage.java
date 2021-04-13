@@ -33,7 +33,7 @@ public class PaySelectionFlexMessage implements Supplier<FlexMessage> {
                       .build();
         
 
-        return new FlexMessage("付款方式", bubble);
+        return new FlexMessage("選擇付款方式", bubble);
     }
 
     private Box createFooterBlock(){

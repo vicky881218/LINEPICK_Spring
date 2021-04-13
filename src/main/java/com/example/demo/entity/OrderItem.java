@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 public class OrderItem {
     private int order_item_id = 0;
-    private String order_item_quantity = "";
+    private int order_item_quantity = 0;
     private int product_id = 0;
     private int orderlist_id = 0;
 
@@ -14,11 +14,11 @@ public class OrderItem {
         this.order_item_id = order_item_id;
     }
 
-    public String getOrderItemQuantity(){
+    public int getOrderItemQuantity(){
         return order_item_quantity;
     }
 
-    public void setOrderItemQuantity(String order_item_quantity){
+    public void setOrderItemQuantity(int order_item_quantity){
         this.order_item_quantity = order_item_quantity;
     }
 

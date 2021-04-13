@@ -131,12 +131,12 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
         orderItem = new OrderItem();
         System.out.println("orderItem");
         System.out.println(orderItem);
-        orderItem.setOrderItemQuantity(order.get(2));
+        orderItem.setOrderItemQuantity(Integer.valueOf(order.get(2)));
         orderItem.setProductId(product_id);
         orderItem.setOrderListId(orderlistLastRecord.getOrderListId());
         orderItemDAO.insert(orderItem);
         
-        return new FlexMessage("OrderInformation", bubble);
+        return new FlexMessage("訂單資訊", bubble);
     }
 
     private Box createFooterBlock(){
@@ -148,17 +148,12 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
         catch (SQLException e){
             System.out.println(e);
         }
-        final Button callAction = Button
-                .builder()
-                .style(ButtonStyle.LINK)
-                .height(ButtonHeight.SMALL)
-                .action(new MessageAction("更改購買資訊", buyer.getBuyerName()))
-                .build();
+       
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, callAction))
+                  .contents(asList(spacer))
                   .build();
     }
 
@@ -315,8 +310,27 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                 .build()
                     ))
                     .build();
-                    
-                    final Box totalPayment =
+            final Box Payment =
+                    Box.builder()
+                        .layout(FlexLayout.BASELINE)
+                        .spacing(FlexMarginSize.SM)
+                        .contents(asList(
+                                Text.builder()
+                                    .text("單價:")
+                                    .color("#aaaaaa")
+                                    .size(FlexFontSize.SM)
+                                    .flex(4)
+                                    .build(),
+                                Text.builder()
+                                    .text(""+singleProductPrice+"元")
+                                    .wrap(true)
+                                    .color("#666666")
+                                    .size(FlexFontSize.SM)
+                                    .flex(5)
+                                    .build()
+                        ))
+                        .build();        
+            final Box totalPayment =
                     Box.builder()
                         .layout(FlexLayout.BASELINE)
                         .spacing(FlexMarginSize.SM)
@@ -328,7 +342,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                     .flex(4)
                                     .build(),
                                 Text.builder()
-                                    .text(""+Integer.valueOf(order.get(2))*singleProductPrice)
+                                    .text(""+Integer.valueOf(order.get(2))*singleProductPrice+"元")
                                     .wrap(true)
                                     .color("#666666")
                                     .size(FlexFontSize.SM)
@@ -350,11 +364,19 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
             }else{
                 usePickmoneyPrice = pickmoney;
             }
-            buyer.setPickmoney(pickmoney-usePickmoneyPrice);
-            buyerDAO.update(buyer);
+            
+            
             System.out.println("usePickmoney?????");
             System.out.println(usePickmoneyPrice);
-    
+            
+            int AllPayment = Integer.valueOf(order.get(2))*singleProductPrice-usePickmoneyPrice;
+            int point = 0;
+            if(AllPayment>=500){
+                point += (AllPayment/500)*100;
+            }
+            buyer.setPickmoney(pickmoney-usePickmoneyPrice);
+            buyer.setPickpoint(point+buyer.getPickpoint());
+            buyerDAO.update(buyer);
             final Box usePickmoney =
                     Box.builder()
                         .layout(FlexLayout.BASELINE)
@@ -422,7 +444,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(name, phone, mail, address,productDtail,totalPayment,usePickmoney,realPayment,paymentSelection))
+                  .contents(asList(name, phone, mail, address,productDtail, Payment, totalPayment,usePickmoney,realPayment,paymentSelection))
                   .build();
     }
     
