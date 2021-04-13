@@ -106,6 +106,7 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
             OrderList orderListStatus = retrieveOrderListStatus(orderlist_status);
             orderlist_status = orderListStatus.getOrderListStatus();
             orderListId = retrieveOrderListId(orderlist_status, buyer_id);
+            
             product = retrieveOneProduct(product_id);
     
         for(OrderList x : orderListId){  

@@ -71,11 +71,6 @@ public List<Product> findOneByName(String product_name) {
   return this.jdbcTemplate.queryForObject( "select * from product where product_name=? and product_style=?", 
    new ProductMapper(),product_name,product_style);
 }
-/*!--------------------------------------抓商品的庫存----------------------------------------!*/ 
-public Product findThisProductStock(int product_id) {
-  return this.jdbcTemplate.queryForObject( "select * from product where product_id=?", 
-   new ProductMapper(),product_id);
-}
 
 
  private static final class ProductMapper implements RowMapper<Product> {

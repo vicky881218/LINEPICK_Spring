@@ -43,7 +43,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
     private String product_name;
     private String product_style;
     private Product product;
-    private Product productStock;
+    
     public OrderInformationFlexMessage(BuyerDAO buyerDAO, String buyer_id, List<String> order,OrderListDAO orderListDAO,OrderItemDAO orderItemDAO, ProductDAO productDAO) {
         this.buyerDAO = buyerDAO;
         this.buyer_id = buyer_id;

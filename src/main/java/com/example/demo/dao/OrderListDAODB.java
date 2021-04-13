@@ -56,7 +56,7 @@ public OrderList findByOrderStatus1(String orderlist_status) {
    
 }
 public OrderList findByOrderStatus2(String orderlist_status) {
-  orderlist_status = "運送中";
+  orderlist_status = "已出貨";
    OrderList anOrderList = jdbcTemplate.queryForObject( 
      "select * from orderlist where orderlist_status=? group by orderlist_status", 
      new OrderListMapper(), orderlist_status);
@@ -71,18 +71,18 @@ public OrderList findByOrderStatus2(String orderlist_status) {
 
 public List<OrderList> findAllMyOrderList(String orderlist_status, String buyer_id) {
   orderlist_status = "已完成";
-  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=? order by orderlist_id DESC", 
    new OrderListMapper(), orderlist_status, buyer_id);
 }
 
 public List<OrderList> findAllMyOrderList1(String orderlist_status, String buyer_id) {
   orderlist_status = "未出貨";
-  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=? order by orderlist_id DESC", 
    new OrderListMapper(),orderlist_status, buyer_id);
 }
 public List<OrderList> findAllMyOrderList2(String orderlist_status, String buyer_id) {
-  orderlist_status = "運送中";
-  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=?", 
+  orderlist_status = "已出貨";
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=? order by orderlist_id DESC", 
    new OrderListMapper(),orderlist_status, buyer_id);
 }
 
