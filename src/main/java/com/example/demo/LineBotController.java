@@ -216,10 +216,10 @@ public class LineBotController {
             this.reply(replyToken, new OrderListNotYetFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO, buyerDAO).get());
             break;
         }
-        case "已出貨": {
+        case "運送中": {
             String buyer_id = event.getSource().getUserId();
             int product_id = 1;
-            String orderlist_status = "已出貨";
+            String orderlist_status = "運送中";
             this.reply(replyToken, new OrderListTransportFlexMessage(buyer_id, product_id, orderlist_status, orderListDAO, productDAO, orderItemDAO, buyerDAO).get());
             break;
         }
@@ -251,7 +251,7 @@ public class LineBotController {
             }
             break;
         }
-        case "註冊": {
+        case "加入賴皮": {
             String buyer_id = event.getSource().getUserId();
             
             if (buyer_id != null) {

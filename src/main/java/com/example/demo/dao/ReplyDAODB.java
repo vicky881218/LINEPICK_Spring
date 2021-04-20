@@ -45,6 +45,11 @@ public List<Reply> findAll() {
     new ReplyMapper());
 }
 
+public List<Reply> findAllQuestion(int reply_id) {
+  return this.jdbcTemplate.query( "select * from reply where reply_id=?", 
+   new ReplyMapper(), reply_id);
+}
+
 
 
 private static final class ReplyMapper implements RowMapper<Reply> {

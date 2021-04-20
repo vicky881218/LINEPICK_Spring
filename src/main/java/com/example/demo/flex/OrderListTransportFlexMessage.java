@@ -178,59 +178,6 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
             e.printStackTrace();
         }
         final int totalPrice = z.getProductPrice()*y.getOrderItemQuantity();
-        final Box name = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
-                        Text.builder()
-                            .text("姓名:"+buyer.getBuyerName())
-                            .color("#aaaaaa")
-                            .size(FlexFontSize.SM)
-                            .flex(1)
-                            .build()
-                ))
-                .build();
-        final Box address = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
-                        Text.builder()
-                            .text("地址:"+buyer.getBuyerAddress())
-                            .color("#aaaaaa")
-                            .size(FlexFontSize.SM)
-                            .flex(1)
-                            .build()
-                ))
-                .build();
-        final Box email = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
-                        Text.builder()
-                            .text("電子郵件:"+buyer.getBuyerMail())
-                            .color("#aaaaaa")
-                            .size(FlexFontSize.SM)
-                            .flex(1)
-                            .build()
-                ))
-                .build();
-        
-        final Box phonenum = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
-                        Text.builder()
-                            .text("電話:"+buyer.getBuyerPhone())
-                            .color("#aaaaaa")
-                            .size(FlexFontSize.SM)
-                            .flex(1)
-                            .build()
-                ))
-                .build();
         final Box aprice = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
@@ -270,43 +217,82 @@ public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
                             .build()
                 ))
                 .build(); 
-        final Box payselection =
-                Box.builder()
-                   .layout(FlexLayout.BASELINE)
-                   .spacing(FlexMarginSize.SM)
-                   .contents(asList(
-                           Text.builder()
-                               .text("付款方式:"+x.getPayType())
-                               .color("#aaaaaa")
-                               .size(FlexFontSize.SM)
-                               .flex(1)
-                               .build()
-                         
-                   ))
-                   .build();
-     
-
-        final Box style =
-                Box.builder()
-                   .layout(FlexLayout.BASELINE)
-                   .spacing(FlexMarginSize.SM)
-                   .contents(asList(
-                           Text.builder()
-                               .text("規格:"+z.getProductStyle())
-                               .color("#aaaaaa")
-                               .size(FlexFontSize.SM)
-                               .flex(1)
-                               .build()
-                         
-                   ))
-                   .build();
-
-        return Box.builder()
-                  .layout(FlexLayout.VERTICAL)
-                  .margin(FlexMarginSize.LG)
-                  .spacing(FlexMarginSize.SM)
-                  .contents(asList(name, phonenum, address, email, aprice, price,quantity, style, payselection))
-                  .build();
-    }
-
-}
+                int realpayment = x.getOrderListPayment()-x.getPickmoneyUse();
+                final Box realPayment = Box
+                                .builder()
+                                .layout(FlexLayout.BASELINE)
+                                .spacing(FlexMarginSize.SM)
+                                .contents(asList(
+                                        Text.builder()
+                                            .text("實付金額:"+realpayment+"元")
+                                            .color("#aaaaaa")
+                                            .size(FlexFontSize.SM)
+                                            .flex(1)
+                                            .build()
+                                ))
+                                .build();
+                final Box pickmoneyPayment = Box
+                                .builder()
+                                .layout(FlexLayout.BASELINE)
+                                .spacing(FlexMarginSize.SM)
+                                .contents(asList(
+                                        Text.builder()
+                                            .text("購物金折抵金額:"+x.getPickmoneyUse()+"元")
+                                            .color("#aaaaaa")
+                                            .size(FlexFontSize.SM)
+                                            .flex(1)
+                                            .build()
+                                ))
+                                .build();
+                        final Box payselection =
+                                Box.builder()
+                                   .layout(FlexLayout.BASELINE)
+                                   .spacing(FlexMarginSize.SM)
+                                   .contents(asList(
+                                           Text.builder()
+                                               .text("付款方式:"+x.getPayType())
+                                               .color("#aaaaaa")
+                                               .size(FlexFontSize.SM)
+                                               .flex(1)
+                                               .build()
+                                         
+                                   ))
+                                   .build();
+                    final Box orderdate =
+                                   Box.builder()
+                                      .layout(FlexLayout.BASELINE)
+                                      .spacing(FlexMarginSize.SM)
+                                      .contents(asList(
+                                              Text.builder()
+                                                  .text("下單日期:"+x.getOrderDate())
+                                                  .color("#aaaaaa")
+                                                  .size(FlexFontSize.SM)
+                                                  .flex(1)
+                                                  .build()
+                                            
+                                      ))
+                                      .build();
+                        final Box style =
+                                Box.builder()
+                                   .layout(FlexLayout.BASELINE)
+                                   .spacing(FlexMarginSize.SM)
+                                   .contents(asList(
+                                           Text.builder()
+                                               .text("規格:"+z.getProductStyle())
+                                               .color("#aaaaaa")
+                                               .size(FlexFontSize.SM)
+                                               .flex(1)
+                                               .build()
+                                         
+                                   ))
+                                   .build();
+                
+                        return Box.builder()
+                                  .layout(FlexLayout.VERTICAL)
+                                  .margin(FlexMarginSize.LG)
+                                  .spacing(FlexMarginSize.SM)
+                                  .contents(asList(aprice, price, realPayment, pickmoneyPayment, quantity, style, payselection, orderdate))
+                                  .build();
+                    }
+                
+                }

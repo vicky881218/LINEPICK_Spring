@@ -86,7 +86,7 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
-                .action(new MessageAction("已出貨","已出貨"))
+                .action(new MessageAction("運送中","運送中"))
                 .build();
        
 
@@ -148,7 +148,7 @@ public class OrderStatusFlexMessage implements Supplier<FlexMessage> {
                       .spacing(FlexMarginSize.SM)
                       .contents(asList(
                               Text.builder()
-                                  .text("若是要查詢運送中的訂單，請按已出貨")
+                                  .text("若是要查詢運送中的訂單，請按運送中")
                                   .color("#aaaaaa")
                                   .size(FlexFontSize.SM)
                                   .flex(1)

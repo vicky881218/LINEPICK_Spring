@@ -56,7 +56,7 @@ public OrderList findByOrderStatus1(String orderlist_status) {
    
 }
 public OrderList findByOrderStatus2(String orderlist_status) {
-  orderlist_status = "已出貨";
+  orderlist_status = "運送中";
    OrderList anOrderList = jdbcTemplate.queryForObject( 
      "select * from orderlist where orderlist_status=? group by orderlist_status", 
      new OrderListMapper(), orderlist_status);
@@ -81,7 +81,7 @@ public List<OrderList> findAllMyOrderList1(String orderlist_status, String buyer
    new OrderListMapper(),orderlist_status, buyer_id);
 }
 public List<OrderList> findAllMyOrderList2(String orderlist_status, String buyer_id) {
-  orderlist_status = "已出貨";
+  orderlist_status = "運送中";
   return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? and buyer_id=? order by orderlist_id DESC", 
    new OrderListMapper(),orderlist_status, buyer_id);
 }
@@ -98,9 +98,9 @@ public OrderList findTheLastRecordOfOrderlist(String buyer_id,int totalLength) {
 
 public int insert(OrderList OrderList){ 
   return jdbcTemplate.update(
-    "insert into orderlist (pay_type, pay_status, orderlist_status, orderlist_payment, buyer_id) values(?,?,?,?,?)",
+    "insert into orderlist (pay_type, pay_status, orderlist_status, orderlist_payment, order_date, pickmoney_use, buyer_id) values(?,?,?,?,?,?,?)",
     OrderList.getPayType(), OrderList.getPayStatus(), OrderList.getOrderListStatus(),
-    OrderList.getOrderListPayment(), OrderList.getBuyerId());
+    OrderList.getOrderListPayment(), OrderList.getOrderDate(),OrderList.getPickmoneyUse(), OrderList.getBuyerId());
  }
  
  private static final class OrderListMapper implements RowMapper<OrderList> {
@@ -112,6 +112,8 @@ public int insert(OrderList OrderList){
          OrderList.setPayStatus(rs.getString("pay_status"));
          OrderList.setOrderListStatus(rs.getString("orderlist_status"));
          OrderList.setOrderListPayment(rs.getInt("orderlist_payment"));
+         OrderList.setOrderDate(rs.getString("order_date"));
+         OrderList.setPickmoneyUse(rs.getInt("pickmoney_use"));
          OrderList.setBuyerId(rs.getString("buyer_id"));
         
          return OrderList;

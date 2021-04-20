@@ -43,13 +43,15 @@ public class ExchangePickMoneyAll implements Supplier<TextMessage> {
                 pickpoint-=100*q;
                 pickmoney+=10*q;
              }
-            
+             int pickpo = buyer.getPickpoint();
            buyer.setPickmoney(pickmoney);
            buyer.setPickpoint(pickpoint);
           
            buyerDAO.update(buyer);
-      
-        return new TextMessage("您兌換過後的購物金總額為"+buyer.getPickmoney()+"元,"+"剩餘賴皮指數為"+buyer.getPickpoint()+"點");
-      
+           if (pickpo>100){
+            return new TextMessage("您兌換過後的購物金總額為"+buyer.getPickmoney()+"元,"+"剩餘賴皮指數為"+buyer.getPickpoint()+"點");
+        }else{
+            return new TextMessage("您的賴皮指數不足");
+        }
     }
 }

@@ -131,20 +131,33 @@ public class PickPointFlexMessage implements Supplier<FlexMessage> {
         catch (SQLException e){
             System.out.println(e);
         }
-        final Box place = Box
+        final Box point = Box
                 .builder()
                 .layout(FlexLayout.BASELINE)
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("目前您的賴皮指數有"+buyer.getPickpoint()+"點")
+                            .text("您的賴皮指數:"+buyer.getPickpoint()+"點")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
                             .build()
                 ))
                 .build();
-        final Box time =
+        final Box pickmon = Box
+                .builder()
+                .layout(FlexLayout.BASELINE)
+                .spacing(FlexMarginSize.SM)
+                .contents(asList(
+                        Text.builder()
+                            .text("您的購物金:"+buyer.getPickmoney()+"元")
+                            .color("#aaaaaa")
+                            .size(FlexFontSize.SM)
+                            .flex(1)
+                            .build()
+                ))
+                .build();
+        final Box des =
                 Box.builder()
                    .layout(FlexLayout.BASELINE)
                    .spacing(FlexMarginSize.SM)
@@ -175,7 +188,7 @@ public class PickPointFlexMessage implements Supplier<FlexMessage> {
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(place, time, exchange))
+                  .contents(asList(point, pickmon, des, exchange))
                   .build();
     }
 

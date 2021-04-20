@@ -1,7 +1,8 @@
 package com.example.demo.flex;
 import static java.util.Arrays.asList;
-
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.function.Supplier;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,13 +201,21 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
         String pay_type = order.get(4);
         String pay_status = "N";
         int orderlist_payment = singleProductPrice*Integer.valueOf(order.get(2));
+        Date date = new Date();
+       SimpleDateFormat bartDateFormat = new SimpleDateFormat("yyyyMMdd");       
+       
+       String order_date = bartDateFormat.format(date).toString();       
+       System.out.println("date????????");
+       System.out.println(order_date);
         
         orderlist.setOrderListPayment(orderlist_payment);
         orderlist.setOrderListStatus(orderlist_status);
         orderlist.setPayType(pay_type);
         orderlist.setPayStatus(pay_status);
+        orderlist.setOrderDate(order_date);
         orderlist.setBuyerId(buyer_id);
-        orderListDAO.insert(orderlist);
+
+        
 
         final Box name = Box
                 .builder()
@@ -349,29 +358,52 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                     .build()
                         ))
                         .build();
-    
+            final Box orderDate =
+                        Box.builder()
+                            .layout(FlexLayout.BASELINE)
+                            .spacing(FlexMarginSize.SM)
+                            .contents(asList(
+                                    Text.builder()
+                                        .text("下單日期:")
+                                        .color("#aaaaaa")
+                                        .size(FlexFontSize.SM)
+                                        .flex(4)
+                                        .build(),
+                                    Text.builder()
+                                        .text(order_date)
+                                        .wrap(true)
+                                        .color("#666666")
+                                        .size(FlexFontSize.SM)
+                                        .flex(5)
+                                        .build()
+                            ))
+                            .build();
             final int pickmoney;
             if(order.get(3).equals("Y")){
                 pickmoney=buyer.getPickmoney();
             }else{
                 pickmoney=0;
             }
-
             final int usePickmoneyPrice;
-            if(Integer.valueOf(order.get(2))*singleProductPrice<pickmoney){
-               usePickmoneyPrice = singleProductPrice;
-            }else{
+            int Allprice = Integer.valueOf(order.get(2))*singleProductPrice;
+            if(Allprice>=100 && pickmoney <= Allprice/100*10){
                 usePickmoneyPrice = pickmoney;
+            }else if(Allprice>=100 && pickmoney > Allprice/100*10){
+                usePickmoneyPrice = Allprice/100*10;
             }
-            
+            else{
+                usePickmoneyPrice = 0;
+            }
+            orderlist.setPickmoneyUse(usePickmoneyPrice);
+            orderListDAO.insert(orderlist);
             
             System.out.println("usePickmoney?????");
             System.out.println(usePickmoneyPrice);
             
             int AllPayment = Integer.valueOf(order.get(2))*singleProductPrice-usePickmoneyPrice;
             int point = 0;
-            if(AllPayment>=500){
-                point += (AllPayment/500)*100;
+            if(AllPayment>=100){
+                point += (AllPayment/100)*10;
             }
             buyer.setPickmoney(pickmoney-usePickmoneyPrice);
             buyer.setPickpoint(point+buyer.getPickpoint());
@@ -437,13 +469,33 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                         .build()
                             ))
                             .build();
+            final Box gainpoint =
+                            Box.builder()
+                                .layout(FlexLayout.BASELINE)
+                                .spacing(FlexMarginSize.SM)
+                                .contents(asList(
+                                        Text.builder()
+                                            .text("可獲得賴皮指數:")
+                                            .color("#aaaaaa")
+                                            .size(FlexFontSize.SM)
+                                            .flex(4)
+                                            .build(),
+                                        Text.builder()
+                                            .text(point+"點")
+                                            .wrap(true)
+                                            .color("#666666")
+                                            .size(FlexFontSize.SM)
+                                            .flex(5)
+                                            .build()
+                                ))
+                                .build();
     
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(name, phone, mail, address,productDtail, Payment, totalPayment,usePickmoney,realPayment,paymentSelection))
+                  .contents(asList(name, phone, mail, address,productDtail, Payment, totalPayment,orderDate, usePickmoney,realPayment,paymentSelection, gainpoint))
                   .build();
     }
     

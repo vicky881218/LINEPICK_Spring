@@ -145,7 +145,7 @@ public class PickMoneyFlexMessage implements Supplier<FlexMessage> {
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("目前您的賴皮購物金尚有"+buyer.getPickmoney()+"元")
+                            .text("您的賴皮購物金:"+buyer.getPickmoney()+"元")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
@@ -158,7 +158,7 @@ public class PickMoneyFlexMessage implements Supplier<FlexMessage> {
                 .spacing(FlexMarginSize.SM)
                 .contents(asList(
                         Text.builder()
-                            .text("您的賴皮指數有"+buyer.getPickpoint()+"點")
+                            .text("您的賴皮指數:"+buyer.getPickpoint()+"點")
                             .color("#aaaaaa")
                             .size(FlexFontSize.SM)
                             .flex(1)
@@ -197,7 +197,7 @@ public class PickMoneyFlexMessage implements Supplier<FlexMessage> {
                          .spacing(FlexMarginSize.SM)
                          .contents(asList(
                                  Text.builder()
-                                     .text("若只要兌換一筆請按'兌換一次'")
+                                     .text("若只要兌換10元請按'兌換一次'")
                                      .color("#aaaaaa")
                                      .size(FlexFontSize.SM)
                                      .flex(1)
