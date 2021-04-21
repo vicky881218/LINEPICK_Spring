@@ -120,8 +120,17 @@ public class OrderListNotYetFlexMessage implements Supplier<FlexMessage>{
 
         final Box footerBlock = createFooterBlock();
         final Box bodyBlock = createBodyBlock(z, y, x);
+        final Image heroBlock =
+                Image.builder()
+                     .url(URI.create(z.getProductPhoto()))
+                     .size(ImageSize.FULL_WIDTH)
+                     .aspectRatio(ImageAspectRatio.R20TO13)
+                     .aspectMode(ImageAspectMode.Cover)
+                     .action(new URIAction("label", URI.create("http://example.com"), null))
+                     .build();
         bubble.add(
                 Bubble.builder()
+                      .hero(heroBlock)
                       .body(bodyBlock)
                       .footer(footerBlock)
                       .build());

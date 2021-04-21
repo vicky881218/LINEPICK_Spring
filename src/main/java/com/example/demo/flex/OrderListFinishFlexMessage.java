@@ -119,8 +119,17 @@ public class OrderListFinishFlexMessage implements Supplier<FlexMessage> {
         final Box footerBlock = createFooterBlock(z);
         final Box bodyBlock = createBodyBlock(z,y,x);
       //  final Box info = createInfoBox(z,y);
+      final Image heroBlock =
+                Image.builder()
+                     .url(URI.create(z.getProductPhoto()))
+                     .size(ImageSize.FULL_WIDTH)
+                     .aspectRatio(ImageAspectRatio.R20TO13)
+                     .aspectMode(ImageAspectMode.Cover)
+                     .action(new URIAction("label", URI.create("http://example.com"), null))
+                     .build();
         bubble.add(
                 Bubble.builder()
+                      .hero(heroBlock)
                       .body(bodyBlock)
                       .footer(footerBlock)
                       .build());
