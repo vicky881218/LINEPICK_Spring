@@ -13,6 +13,7 @@ public interface ProductTypeDAO {
     public ProductType findOne(int product_type_id);
     public List<ProductType> findAll();
     public List<ProductType> findProuductType(int type_id);
+    public List<ProductType> findOneTypeAllProduct(int type_id);
     public int insert(ProductType ProductType) throws SQLException;
     public int update(ProductType ProductType);
     public int delete(int product_type_id);

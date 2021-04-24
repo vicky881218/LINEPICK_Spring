@@ -12,8 +12,9 @@ public interface ProductDAO {
     public int insert(Product Product) throws SQLException;
     public List<Product> findAll();
     public List<Product> findOneByName(String product_name);
-    public List<Product> findOneTypeAllProduct(int product_id);
+    public Product findOneProductName(int product_id);
     public List<Product> findOneProductAllStyle(String product_name);
+    public List<Product> findOneTypeAllProduct(int product_id);
     public List<Product> findOneProductAllSize(String product_style,String product_name);
     public Product findThisProductPrice(String product_name,String product_style,String product_size);
     public Product findOne(int product_id);

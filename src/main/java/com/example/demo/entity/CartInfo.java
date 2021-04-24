@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
-public class ProductType {
-    private int product_id = 1;
-    private int type_id = 0;
-    private int product_type_id = 1;
-    private String type_name = "";
-    private int seller_id = 0;
+public class CartInfo {
+    private int cart_id = 0;
+    private String buyer_id = "";
+    private int product_id = 0;
+    private int quantity = 0;        
     private String product_name = "";
     private String product_desc = "";
     private int product_price = 0;
@@ -14,44 +13,36 @@ public class ProductType {
     private String product_style = "";
     private int discount = 0;
 
+        public int getCartId(){
+            return cart_id;
+        }
+    
+        public void setCartId(int cart_id){
+            this.cart_id=cart_id;
+        }
+
+        public String getBuyerId(){
+            return buyer_id;
+        }
+    
+        public void setBuyerId(String buyer_id){
+            this.buyer_id=buyer_id;
+        }
+    
+        public int getQuantity(){
+            return quantity;
+        }
+    
+        public void setQuantity(int quantity){
+            this.quantity=quantity;
+        }
+
     public int getProductId(){
         return product_id;
     }
 
     public void setProductId(int product_id){
         this.product_id=product_id;
-    }
-
-    public int getTypeId(){
-        return type_id;
-    }
-
-    public void setTypeId(int type_id){
-        this.type_id=type_id;
-    }
-
-    public int getProductTypeId(){
-        return product_type_id;
-    }
-
-    public void setProductTypeId(int product_type_id){
-        this.product_type_id=product_type_id;
-    }
-
-    public String getTypeName(){
-        return type_name;
-    }
-
-    public void setTypeName(String type_name){
-        this.type_name=type_name;
-    }
-
-    public int getSellerId(){
-        return seller_id;
-    }
-
-    public void setSellerId(int seller_id){
-        this.seller_id=seller_id;
     }
 
     public String getProductName(){

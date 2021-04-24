@@ -44,12 +44,13 @@ public class TypeDAODB implements TypeDAO {
         return aType;
     }
 
+/*Hader section顯示---------------------------------------------------------------------------------------------*/
     public List<Type> findAll() {
         return this.jdbcTemplate.query(
                 "select type_id,type_name,seller_id from Type",
                 new typeMapper());
     }
-
+/*---------------------------------------------------------------------------------------------*/
     public List<Type> findSellerAll(int seller_id) {
         return this.jdbcTemplate.query(
             "select type_id,type_name,seller_id from Type where seller_id = ?",

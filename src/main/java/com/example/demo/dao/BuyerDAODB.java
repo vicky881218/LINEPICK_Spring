@@ -32,6 +32,8 @@ public JdbcTemplate getJdbcTemplate() {
 }
 */
 
+
+/*買家資訊---------------------------------------------------------------------------------------------*/
 //jdbcTemplate  
  public Buyer findOne(String buyer_id) {
    Buyer aBuyer = jdbcTemplate.queryForObject( 
@@ -43,6 +45,8 @@ public JdbcTemplate getJdbcTemplate() {
       "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer where buyer_id = ?", 
       new BuyerMapper(),buyer_id); */
  }
+ /*---------------------------------------------------------------------------------------------*/
+
 
  public List<Buyer> findAll() {
      return this.jdbcTemplate.query( "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from buyer", 
@@ -70,13 +74,15 @@ public JdbcTemplate getJdbcTemplate() {
     Buyer.getBuyerId(),Buyer.getBuyerName(), Buyer.getBuyerPhone(),Buyer.getBuyerMail(),
     Buyer.getBuyerAddress(), Buyer.getPickpoint(), Buyer.getPickmoney());
  }
- 
+
+ /*更新買家資訊---------------------------------------------------------------------------------------------*/
  public int update(Buyer Buyer) {
   return jdbcTemplate.update(
-    "update Buyer set buyer_name=?, buyer_phone=?,buyer_mail=?,buyer_address=?, pickpoint=?,pickmone=? where buyer_id =?",
+    "update Buyer set buyer_name=?, buyer_phone=?,buyer_mail=?,buyer_address=?, pickpoint=?,pickmoney=? where buyer_id =?",
     Buyer.getBuyerName(), Buyer.getBuyerPhone(),Buyer.getBuyerMail(),
     Buyer.getBuyerAddress(), Buyer.getPickpoint(), Buyer.getPickmoney(),Buyer.getBuyerId());
  }
+ /*---------------------------------------------------------------------------------------------*/
 
  public int delete(String buyer_id) {
   return jdbcTemplate.update(

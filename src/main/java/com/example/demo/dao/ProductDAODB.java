@@ -31,8 +31,10 @@ public class ProductDAODB implements ProductDAO{
   return aProduct;
  }
 
+/*首頁---------------------------------------------------------------------------------------------*/
+//SingleProduct(同品名顯示一次就好) from Type
  public List<Product> findAll() {
-     return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product", 
+     return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,discount from product group by product_name", 
       new ProductMapper());
  }
 
@@ -41,16 +43,27 @@ public class ProductDAODB implements ProductDAO{
   "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_name = ? group by product_name", 
   new ProductMapper(), product_name);
 }
+/*---------------------------------------------------------------------------------------------*/
 
- public List<Product> findOneTypeAllProduct(int product_id) {
-  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_id=? group by product_name", 
+//用id找相同name 等一下再用name找同品名商品 from ProductInfo
+ public Product findOneProductName(int product_id) {
+  return this.jdbcTemplate.queryForObject( "select * from product where product_id=?", 
    new ProductMapper(),product_id);
 }
 
+/*單一商品頁的商品詳細資訊---------------------------------------------------------------------------------------------*/
  public List<Product> findOneProductAllStyle(String product_name) {
-  return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_name=? group by product_style ", 
+  return this.jdbcTemplate.query( "select * from product where product_name=?", 
    new ProductMapper(),product_name);
 }
+/*---------------------------------------------------------------------------------------------*/
+
+/*找一個type下的商品---------------------------------------------------------------------------------------------*/
+public List<Product> findOneTypeAllProduct(int product_id) {
+  return this.jdbcTemplate.query( "select * from product where product_id=?", 
+   new ProductMapper(),product_id);
+}
+/*---------------------------------------------------------------------------------------------*/
 
 public List<Product> findOneProductAllSize(String product_style,String product_name) {
   return this.jdbcTemplate.query( "select product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style,product_size from product where product_style=? and product_name=?", 
