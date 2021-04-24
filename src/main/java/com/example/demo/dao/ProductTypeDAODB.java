@@ -35,6 +35,15 @@ public class ProductTypeDAODB implements ProductTypeDAO {
                 new ProductTypeMapper());
     }
 
+    /*用typeId找這個Type對應的所有product---------------------------------------------------------------------------------------------*/
+    //從typeName找對應的所有商品(分類)
+    public List<ProductType> findOneTypeAllProduct(int type_id) {
+        return this.jdbcTemplate.query(
+                "Select * FROM type, product_type,product where type.type_id = product_type.type_id and product_type.product_id = product.product_id and type.type_id=?",
+                new ProductTypeMapper(),type_id);
+    }
+    /*---------------------------------------------------------------------------------------------*/
+
     //找同一個type_id內的所有produt_id
     public List<ProductType> findProuductType(int type_id) {
         return this.jdbcTemplate.query(
