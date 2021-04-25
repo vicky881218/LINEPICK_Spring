@@ -38,11 +38,11 @@ public class OrderItemDAODB implements OrderItemDAO{
         return this.jdbcTemplate.query( "select * from order_item where orderlist_id=?", 
          new OrderItemMapper(), orderlist_id);
       }
-    public OrderItem findOneOrderItemQuantity(int orderlist_id) {
-        OrderItem aOrderItem = jdbcTemplate.queryForObject(
+      
+    public List<OrderItem> findOneOrderItemQuantity(int orderlist_id) {
+         return this.jdbcTemplate.query(
                 "select order_item_id, order_item_quantity, product_id, orderlist_id from order_item where orderlist_id = ?",
                 new OrderItemMapper(), orderlist_id);
-                return aOrderItem;
      }
    
       public int insert(OrderItem OrderItem){ 

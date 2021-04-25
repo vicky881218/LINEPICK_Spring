@@ -20,10 +20,19 @@ public class CartDAODB implements CartDAO{
     private DataSource dataSource;
     @Autowired
     JdbcTemplate jdbcTemplate;
-
+    public Cart findOne(int buyer_id) {
+      Cart aCart = jdbcTemplate.queryForObject(
+              "select * where buyer_id = ?",
+              new CartMapper(), buyer_id);
+              return aCart;
+   }
     public List<Cart> findCartAllProduct(String buyer_id) {
         return this.jdbcTemplate.query( "select * from cart where buyer_id=?", 
          new CartMapper(), buyer_id);
+      }
+    public List<Cart> findCartAllProductByCartId(int cart_id) {
+        return this.jdbcTemplate.query( "select * from cart where cart_id=?", 
+         new CartMapper(), cart_id);
       }
 
     private static final class CartMapper implements RowMapper<Cart> {

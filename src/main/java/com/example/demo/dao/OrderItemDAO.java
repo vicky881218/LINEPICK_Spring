@@ -10,5 +10,5 @@ public interface OrderItemDAO {
     public List<OrderItem> findAll();
     public List<OrderItem> findProductId(int orderlist_id);
     public int insert(OrderItem OrderItem);
-    public OrderItem findOneOrderItemQuantity(int orderlist_id);
+    public List<OrderItem> findOneOrderItemQuantity(int orderlist_id);
 }

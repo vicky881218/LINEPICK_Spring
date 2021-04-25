@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.example.demo.dao.BuyerDAO;
 import com.example.demo.dao.BuyerDAODB;
+import com.example.demo.dao.CartDAO;
 import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ReplyDAO;
 import com.example.demo.dao.TypeDAO;
@@ -54,6 +55,8 @@ public class LineBotController {
     @Autowired
     private ProductDAO productDAO;
     @Autowired
+    private CartDAO cartDAO;
+    @Autowired
     private OrderItemDAO orderItemDAO;
     @Autowired
     private ProductTypeDAO productTypeDAO;
@@ -92,20 +95,16 @@ public class LineBotController {
         switch (data[data.length-1]){
             case "黑巧克力(24入)": case"白巧克力(24入)": case"雙層玻璃杯": case"不鏽鋼胖胖杯": case "陶瓷變色馬克杯": case "綠茶洗面乳80ml": case "火山泥洗面乳70ml":
             String product_name=data[0];
-            String product_style = data[1];
+            String quantity = data[1];
+            String product_style = data[2];
             order.add(product_name);
+            order.add(quantity);
             order.add(product_style);
-          
+            String buyer_id = event.getSource().getUserId();
+            this.reply(replyToken, new UsePickmoneyFlexMessage(buyerDAO,buyer_id).get());
             // this.reply(replyToken, new StyleFlexMessage(productDAO,product_name).get());
-           this.replyText(replyToken, "請輸入購買數量");
+        //    this.replyText(replyToken, "請輸入購買數量");
             break;
-
-            // case "黑":  case "白": case "紅":
-            // product_name=data[0];
-            // String product_style=data[1];
-            // order.add(product_style);
-            // this.replyText(replyToken, "請輸入購買數量");
-            // break;
 
             case "Y":
             String usePickmoney=data[0];
@@ -125,7 +124,7 @@ public class LineBotController {
             order.add(paymentChoice);
             System.out.println("here is final");
             System.out.println(order);
-            String buyer_id = event.getSource().getUserId();
+            buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new OrderInformationFlexMessage(buyerDAO, buyer_id, order, orderListDAO, orderItemDAO, productDAO).get());
            order.clear();
             break;
@@ -156,13 +155,13 @@ public class LineBotController {
     }
 
     private void handleTextContent(String replyToken, Event event, TextMessageContent content) {
-        String text = content.getText();
-        String quantity = "^[0-9]";
-        if (text.matches(quantity)){
-            order.add(text);
-            String buyer_id = event.getSource().getUserId();
-            this.reply(replyToken, new UsePickmoneyFlexMessage(buyerDAO,buyer_id).get());
-        }
+         String text = content.getText();
+        // String quantity = "^[0-9]";
+        // if (text.matches(quantity)){
+        //     order.add(text);
+        //     String buyer_id = event.getSource().getUserId();
+        //     this.reply(replyToken, new UsePickmoneyFlexMessage(buyerDAO,buyer_id).get());
+        // }
         
         switch (text) {
         case "賴皮客服": {
@@ -195,7 +194,12 @@ public class LineBotController {
             this.reply(replyToken, new PickMoneyFlexMessage(buyerDAO,buyer_id).get());
             break;
         }
-    
+        case "快速購買": {
+            String buyer_id = event.getSource().getUserId();
+            int product_id=1;
+            this.reply(replyToken, new QuickPurchase(buyer_id, product_id, cartDAO, productDAO, buyerDAO).get());
+            break;
+        }
         case "賴皮紀錄": {
             String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new OrderStatusFlexMessage(orderListDAO,buyer_id).get());

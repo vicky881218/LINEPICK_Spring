@@ -97,7 +97,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                       .build();      
         List<OrderList> orderlistId = new ArrayList<>();
         product_name = order.get(0);
-        product_style = order.get(1);
+        product_style = order.get(2);
         try {
             System.out.println("here in orderlist id");
             System.out.println(buyer_id);
@@ -124,14 +124,14 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
             System.out.println(e);
         }   
         
-        product.setProductStock(product.getProductStock()-Integer.valueOf(order.get(2)));
+        product.setProductStock(product.getProductStock()-Integer.valueOf(order.get(1)));
         productDAO.update(product);
 
         int product_id = product.getProductId();
         orderItem = new OrderItem();
         System.out.println("orderItem");
         System.out.println(orderItem);
-        orderItem.setOrderItemQuantity(Integer.valueOf(order.get(2)));
+        orderItem.setOrderItemQuantity(Integer.valueOf(order.get(1)));
         orderItem.setProductId(product_id);
         orderItem.setOrderListId(orderlistLastRecord.getOrderListId());
         orderItemDAO.insert(orderItem);
@@ -188,7 +188,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
         try {
             buyer = retrieveOneBuyer();
             product_name = order.get(0);
-            product_style = order.get(1);
+            product_style = order.get(2);
             Product thisProduct=retrieveThisProductPrice(product_name,product_style);
             singleProductPrice=thisProduct.getProductPrice();
             System.out.println("singleProductPrice????");
@@ -200,7 +200,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
         String orderlist_status = "未出貨";
         String pay_type = order.get(4);
         String pay_status = "N";
-        int orderlist_payment = singleProductPrice*Integer.valueOf(order.get(2));
+        int orderlist_payment = singleProductPrice*Integer.valueOf(order.get(1));
         Date date = new Date();
        SimpleDateFormat bartDateFormat = new SimpleDateFormat("yyyyMMdd");       
        
@@ -310,7 +310,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                 .flex(4)
                                 .build(),
                             Text.builder()
-                                .text(order.get(0)+" "+order.get(1)+" "+order.get(2)+"件商品")
+                                .text(order.get(0)+" "+order.get(2)+" "+order.get(1)+"件商品")
                                 .wrap(true)
                                 .color("#666666")
                                 .size(FlexFontSize.SM)
@@ -350,7 +350,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                     .flex(4)
                                     .build(),
                                 Text.builder()
-                                    .text(""+Integer.valueOf(order.get(2))*singleProductPrice+"元")
+                                    .text(""+Integer.valueOf(order.get(1))*singleProductPrice+"元")
                                     .wrap(true)
                                     .color("#666666")
                                     .size(FlexFontSize.SM)
@@ -385,7 +385,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                 pickmoney=0;
             }
             final int usePickmoneyPrice;
-            int Allprice = Integer.valueOf(order.get(2))*singleProductPrice;
+            int Allprice = Integer.valueOf(order.get(1))*singleProductPrice;
             if(Allprice>=100 && pickmoney <= Allprice/100*10){
                 usePickmoneyPrice = pickmoney;
             }else if(Allprice>=100 && pickmoney > Allprice/100*10){
@@ -400,7 +400,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
             System.out.println("usePickmoney?????");
             System.out.println(usePickmoneyPrice);
             
-            int AllPayment = Integer.valueOf(order.get(2))*singleProductPrice-usePickmoneyPrice;
+            int AllPayment = Integer.valueOf(order.get(1))*singleProductPrice-usePickmoneyPrice;
             int point = 0;
             if(AllPayment>=100){
                 point += (AllPayment/100)*10;
@@ -441,7 +441,7 @@ public class OrderInformationFlexMessage implements Supplier<FlexMessage>{
                                     .flex(4)
                                     .build(),
                                 Text.builder()
-                                    .text(""+(Integer.valueOf(order.get(2))*singleProductPrice-usePickmoneyPrice))
+                                    .text(""+(Integer.valueOf(order.get(1))*singleProductPrice-usePickmoneyPrice))
                                     .wrap(true)
                                     .color("#666666")
                                     .size(FlexFontSize.SM)
