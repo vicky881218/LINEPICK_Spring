@@ -140,7 +140,7 @@ public class QuickPurchase implements Supplier<FlexMessage> {
                   .text("Pick"+y.getProductName()+y.getProductStyle()+x.getQuantity()+"件")
                   .data(y.getProductName()+" "+x.getQuantity()+" "+y.getProductStyle())
                   .build())
-                .build();
+                .build(); 
         final Separator separator = Separator.builder().build();
         
 
