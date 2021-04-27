@@ -94,10 +94,19 @@ public class ProductRestController {
         buyerDAO.update(buyer);
      }
 
+      //checkout更改商品庫存
+     @PutMapping(value = "/ProductStock")
+     public void retrieveProductInfoUpdate(@RequestBody Product product) throws SQLException {
+        System.out.println("in retrieveProductInfoUpdate spring");
+        System.out.println(product);
+        System.out.println("product.getProductStock():"+product.getProductStock());
+        productDAO.update(product);
+     }
+
      //新增進購物車的資料庫
      @PutMapping(value = "/CartAdd")
      public void retrieveBuyerInformationUpdate(@RequestBody Cart cart) throws SQLException {
-        System.out.println("in BuyerInformation Add spring");
+        System.out.println("in CartAdd spring");
         System.out.println("cart:"+cart);
         System.out.println("buyer.getBuyerName():"+cart.getBuyerId());
         cartDAO.insert(cart);
@@ -118,4 +127,12 @@ public class ProductRestController {
         System.out.println("in CartProductInfo id:"+id);
         return cartInfoDAO.findJoinCartAllProduct(id);  
      }
+
+   //   @GetMapping(value={"/LinkPickRecord/{id}"})
+   //  public List<CartInfo> retrievefindJoinCartAllProduct(@PathVariable("id") String id) throws SQLException{
+   //      System.out.println("in CartProductInfo spring");
+   //      System.out.println("in CartProductInfo id:"+id);
+   //      return cartInfoDAO.findJoinCartAllProduct(id);  
+   //   }
+
 }

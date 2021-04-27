@@ -39,7 +39,6 @@ public class CartInfoDAODB implements CartInfoDAO{
             CartInfo.setProductStock(rs.getInt("product_stock"));
             CartInfo.setProductPhoto(rs.getString("product_photo"));
             CartInfo.setProductStyle(rs.getString("product_style"));
-            CartInfo.setDiscount(rs.getInt("discount"));
             return CartInfo;
         }
     }

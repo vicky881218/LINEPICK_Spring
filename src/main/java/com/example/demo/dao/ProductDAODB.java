@@ -84,7 +84,6 @@ public List<Product> findOneByName(String product_name) {
          Product.setProductStock(rs.getInt("product_stock"));
          Product.setProductPhoto(rs.getString("product_photo"));
          Product.setProductStyle(rs.getString("product_style"));
-         Product.setDiscount(rs.getInt("discount"));
          return Product;
 
      }
@@ -92,16 +91,16 @@ public List<Product> findOneByName(String product_name) {
 
  public int insert(Product Product) throws SQLException{
   return jdbcTemplate.update(
-    "insert into product (product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style, discount) values(?,?,?,?,?,?,?,?)",
+    "insert into product (product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style) values(?,?,?,?,?,?,?)",
     Product.getProductId(),Product.getProductName(), Product.getProductDesc(),Product.getProductPrice(),
-    Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle(), Product.getDiscount());
+    Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle());
  }
  
  public int update(Product Product) {
   return jdbcTemplate.update(
-    "update product set product_name=?, product_desc=?, product_price=?, product_stock=?, product_photo=?, product_style=?, discount=? where product_id =?",
+    "update product set product_name=?, product_desc=?, product_price=?, product_stock=?, product_photo=?, product_style=?where product_id =?",
     Product.getProductName(), Product.getProductDesc(),Product.getProductPrice(),
-    Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle(), Product.getDiscount(), Product.getProductId());
+    Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle(), Product.getProductId());
  }
 
  public int delete(String product_id) {
