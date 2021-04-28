@@ -39,6 +39,20 @@ public class OrderListDAODB implements OrderListDAO{
   return anOrderList;
     
  }
+ public List<OrderList> findSellerFinishOrder(String orderlist_status) {
+  return this.jdbcTemplate.query( "select * from orderlist where orderlist_status=? order by orderlist_id DESC", 
+   new OrderListMapper(), orderlist_status);
+}
+
+public OrderList findSellerOrderContent(int orderlist_id, String orderlist_status){
+  OrderList anOrderList = jdbcTemplate.queryForObject( 
+    "select * from orderlist where orderlist_id=? and orderlist_status=?", 
+    new OrderListMapper(), orderlist_id, orderlist_status);
+    
+  return anOrderList;
+}
+
+
  public OrderList findByOrderStatus(String orderlist_status) {
   orderlist_status = "已完成";
   OrderList anOrderList = jdbcTemplate.queryForObject( 
@@ -97,6 +111,7 @@ public OrderList findTheLastRecordOfOrderlist(String buyer_id,int totalLength) {
 }
 
 public int insert(OrderList OrderList){ 
+ 
   return jdbcTemplate.update(
     "insert into orderlist (pay_type, pay_status, orderlist_status, orderlist_payment, order_date, pickmoney_use, buyer_id) values(?,?,?,?,?,?,?)",
     OrderList.getPayType(), OrderList.getPayStatus(), OrderList.getOrderListStatus(),
