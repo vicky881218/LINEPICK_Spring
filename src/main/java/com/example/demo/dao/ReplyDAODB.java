@@ -50,6 +50,11 @@ public List<Reply> findAllQuestion(int reply_id) {
    new ReplyMapper(), reply_id);
 }
 
+public int insert(Reply Reply) throws SQLException{
+  return jdbcTemplate.update(
+    "insert into Reply (reply_id, reply_question, reply_answer,seller_id) values(?,?,?,?)",
+    Reply.getReplyId(),Reply.getReplyQuestion(), Reply.getReplyAnswer(),Reply.getSellerId());
+ }
 
 
 private static final class ReplyMapper implements RowMapper<Reply> {

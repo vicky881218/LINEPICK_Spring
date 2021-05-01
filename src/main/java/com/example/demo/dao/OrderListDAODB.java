@@ -117,6 +117,13 @@ public int insert(OrderList OrderList){
     OrderList.getPayType(), OrderList.getPayStatus(), OrderList.getOrderListStatus(),
     OrderList.getOrderListPayment(), OrderList.getOrderDate(),OrderList.getPickmoneyUse(), OrderList.getBuyerId());
  }
+
+ public int update(OrderList OrderList) {
+  return jdbcTemplate.update(
+    "update orderlist set pay_type=?, pay_status=?, orderlist_status=?,orderlist_payment=?, order_date=?,pickmoney_use=?, buyer_id=? where orderlist_id =?",
+    OrderList.getPayType(), OrderList.getPayStatus(), OrderList.getOrderListStatus(),
+    OrderList.getOrderListPayment(), OrderList.getOrderDate(),OrderList.getPickmoneyUse(), OrderList.getBuyerId(), OrderList.getOrderListId());
+ }
  
  private static final class OrderListMapper implements RowMapper<OrderList> {
 
