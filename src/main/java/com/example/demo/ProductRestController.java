@@ -70,7 +70,7 @@ public class ProductRestController {
         }
         return oneTypeAll;  
      }
-     //單一商品
+     //單一商品不同款式
      @GetMapping(value={"/ProductsInfo/{name}"})
     public List<Product> retrieveOneNameAllStyle(@PathVariable("name") String name) throws SQLException{
       System.out.println("in /ProductsInfo/{name} spring");
