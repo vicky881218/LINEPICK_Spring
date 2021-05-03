@@ -11,6 +11,10 @@ import java.util.List;
 public interface ReplyDAO {
     public List<Reply> findAll();
     public List<Reply> findAllQuestion(int reply_id);
+    public List<Reply> findAllQuestionSeller(int reply_id);
     public Reply findOne(int seller_id);
     public int insert(Reply Reply) throws SQLException;
+    public int update(Reply Reply);
+    public Reply findOneSeller(int reply_id );
+
 }

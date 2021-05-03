@@ -67,11 +67,28 @@ public class OrderRestController {
     }
 
     @CrossOrigin
+    @GetMapping(value={"/ReplyContent/{replyId}"})
+    public Reply retrieveQAContent(@PathVariable("replyId") int replyId) throws SQLException{
+        System.out.println("in /ReplyContent/:replyId spring");
+        System.out.println("replyId:"+replyId);
+        return replyDAO.findOneSeller(replyId);
+     }
+
+    @CrossOrigin
      @PostMapping(value = "/QAadd")
      public void retrieveQAadd(@RequestBody Reply reply) throws SQLException {
         System.out.println("in orderlist Add spring");
         System.out.println(reply);
         System.out.println("STATUS:"+reply.getReplyAnswer());
         replyDAO.insert(reply);
+     }
+
+     @CrossOrigin
+     @PutMapping(value = "/ServiceEdit")
+     public void retrieveServiceQuestion(@RequestBody Reply reply) throws SQLException {
+        System.out.println("in Reply Add spring");
+        System.out.println(reply);
+        System.out.println("STATUS:"+reply.getReplyQuestion());
+        replyDAO.update(reply);
      }
 }
