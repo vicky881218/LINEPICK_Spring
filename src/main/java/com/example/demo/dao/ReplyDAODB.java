@@ -35,10 +35,21 @@ public class ReplyDAODB implements ReplyDAO {
    new ReplyMapper(), seller_id);
    
  return areply;
-   /*
-    return this.jdbcTemplate.queryForObject( 
-     "select buyer_id,buyer_name, buyer_phone,buyer_mail,buyer_address, pickpoint,pickmoney from Buyer where buyer_id = ?", 
-     new BuyerMapper(),buyer_id); */
+}
+public Reply findOneSeller(int reply_id ) {
+  
+  try {
+  Connection connection = dataSource.getConnection();
+  
+  }
+  catch (Exception e){
+    System.out.println("Error in findOne:"+e);
+  }
+ Reply areply = jdbcTemplate.queryForObject( 
+   "select * from reply where reply_id = ?", 
+   new ReplyMapper(), reply_id);
+   
+ return areply;
 }
 public List<Reply> findAll() {
    return this.jdbcTemplate.query( "select * from reply", 
@@ -49,8 +60,22 @@ public List<Reply> findAllQuestion(int reply_id) {
   return this.jdbcTemplate.query( "select * from reply where reply_id=?", 
    new ReplyMapper(), reply_id);
 }
+public List<Reply> findAllQuestionSeller(int reply_id) {
+  return this.jdbcTemplate.query( "select * from reply where reply_id=?", 
+   new ReplyMapper(), reply_id);
+}
 
+public int insert(Reply Reply) throws SQLException{
+  return jdbcTemplate.update(
+    "insert into Reply (reply_id, reply_question, reply_answer,seller_id) values(?,?,?,?)",
+    Reply.getReplyId(),Reply.getReplyQuestion(), Reply.getReplyAnswer(),Reply.getSellerId());
+ }
 
+public int update(Reply Reply) {
+  return jdbcTemplate.update(
+    "update Reply set reply_question=?, reply_answer=?,seller_id=? where reply_id =?",
+    Reply.getReplyQuestion(), Reply.getReplyAnswer(), Reply.getSellerId(),Reply.getReplyId());
+ }
 
 private static final class ReplyMapper implements RowMapper<Reply> {
 
