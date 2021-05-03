@@ -25,6 +25,11 @@ public class CartInfoDAODB implements CartInfoDAO{
          new CartInfoMapper(),buyer_id);
       }
 
+    public List<CartInfo> findCheckedCart(String buyer_id) {
+        return this.jdbcTemplate.query( "select * from cart join product on cart.product_id=product.product_id where buyer_id=? and checked='true'", 
+         new CartInfoMapper(),buyer_id);
+      }
+
     private static final class CartInfoMapper implements RowMapper<CartInfo> {
 
         public CartInfo mapRow(ResultSet rs, int rowNum) throws SQLException {

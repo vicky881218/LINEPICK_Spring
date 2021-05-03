@@ -138,11 +138,11 @@ public class ProductRestController {
         return cartInfoDAO.findJoinCartAllProduct(id);  
      }
 
-   //   @GetMapping(value={"/LinkPickRecord/{id}"})
-   //  public List<CartInfo> retrievefindJoinCartAllProduct(@PathVariable("id") String id) throws SQLException{
-   //      System.out.println("in CartProductInfo spring");
-   //      System.out.println("in CartProductInfo id:"+id);
-   //      return cartInfoDAO.findJoinCartAllProduct(id);  
-   //   }
-
+    //讀取已勾選的cart商品
+    @GetMapping(value={"/Review/{id}"})
+    public List<CartInfo> retrievefindCheckedCart(@PathVariable("id") String id) throws SQLException{
+         System.out.println("in Review spring");
+         System.out.println("in Review id:"+id);
+         return cartInfoDAO.findCheckedCart(id);  
+     }
 }

@@ -6,4 +6,5 @@ import com.example.demo.entity.CartInfo;
 
 public interface CartInfoDAO {
     public List<CartInfo> findJoinCartAllProduct(String buyer_id);
+    public List<CartInfo> findCheckedCart(String buyer_id);
 }
