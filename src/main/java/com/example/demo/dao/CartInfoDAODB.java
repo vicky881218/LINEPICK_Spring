@@ -33,6 +33,7 @@ public class CartInfoDAODB implements CartInfoDAO{
             CartInfo.setBuyerId(rs.getString("buyer_id"));
             CartInfo.setProductId(rs.getInt("product_id"));
             CartInfo.setQuantity(rs.getInt("quantity"));
+            CartInfo.setChecked(rs.getString("checked"));
             CartInfo.setProductName(rs.getString("product_name"));
             CartInfo.setProductDesc(rs.getString("product_desc"));
             CartInfo.setProductPrice(rs.getInt("product_price"));

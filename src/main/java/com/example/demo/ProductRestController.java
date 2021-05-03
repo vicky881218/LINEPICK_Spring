@@ -81,8 +81,10 @@ public class ProductRestController {
      //買家資訊
      @GetMapping(value={"/Checkout/{id}"})
     public Buyer retrieveOneBuyer(@PathVariable("id") String id) throws SQLException{
-        System.out.println("in checkout spring");
-        return buyerDAO.findOne(id);  
+        System.out.println("in checkout spring begin id:"+id);
+        Buyer result = buyerDAO.findOne(id);
+        System.out.println("in checkout spring end id:"+id);
+        return result;
      }
 
      //checkout更改買家資訊
@@ -91,7 +93,8 @@ public class ProductRestController {
         System.out.println("in BuyerInformation Add spring");
         System.out.println(buyer);
         System.out.println("buyer.getBuyerName():"+buyer.getBuyerName());
-        buyerDAO.update(buyer);
+        int result = buyerDAO.update(buyer);
+        System.out.println("in BuyerInformation result:"+result);
      }
 
       //checkout更改商品庫存
@@ -105,13 +108,20 @@ public class ProductRestController {
 
      //新增進購物車的資料庫
      @PutMapping(value = "/CartAdd")
-     public void retrieveBuyerInformationUpdate(@RequestBody Cart cart) throws SQLException {
+     public void retrieveCartInformationAdd(@RequestBody Cart cart) throws SQLException {
         System.out.println("in CartAdd spring");
         System.out.println("cart:"+cart);
         System.out.println("buyer.getBuyerName():"+cart.getBuyerId());
         cartDAO.insert(cart);
      }
 
+     //更改購物車的資料庫的checked
+      @PutMapping(value = "/CartUpdate")
+      public void retrieveCartInformationUpdate(@RequestBody Cart cart) throws SQLException {
+         System.out.println("in CartUpdate spring");
+         cartDAO.update(cart);
+      }
+     
      //delete購物車
      @DeleteMapping(value = "/CartDeleted/{id}")
      public void retrieveBuyerInformationUpdate(@PathVariable int id) throws SQLException {
