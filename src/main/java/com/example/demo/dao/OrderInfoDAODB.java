@@ -82,7 +82,6 @@ public List<OrderInfo> findAllBuyerOrder(String buyer_id){
         OrderInfo.setProductStock(rs.getInt("product_stock"));
         OrderInfo.setProductPhoto(rs.getString("product_photo"));
         OrderInfo.setProductStyle(rs.getString("product_style"));
-        OrderInfo.setDiscount(rs.getInt("discount"));
         OrderInfo.setOrderItemId(rs.getInt("order_item_id"));
         OrderInfo.setOrderItemQuantity(rs.getInt("order_item_quantity"));
         return OrderInfo;
