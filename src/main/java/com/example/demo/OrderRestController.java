@@ -33,23 +33,35 @@ public class OrderRestController {
     
     @CrossOrigin
     @GetMapping(value={"/Orderlist/{orderListStatus}"})
-    
     public List<OrderInfo> retrieveOrderlistsFinish(@PathVariable("orderListStatus") String orderListStatus) throws SQLException{
         System.out.println("in /Orderlist/:orderListStatus spring");
         System.out.println("orderListStatus:"+orderListStatus);
 
         return orderInfoDAO.findSellerOrder(orderListStatus);
      }
-
+     @CrossOrigin
+     @GetMapping(value={"/RecordType/{orderListStatus}/{buyerId}"})
+     public List<OrderInfo> retrieveOrderlistsBuyer(@PathVariable("orderListStatus") String orderListStatus, @PathVariable("buyerId") String buyerId) throws SQLException{
+         System.out.println("in /Orderlist/:orderListStatus spring");
+         System.out.println("orderListStatus:"+orderListStatus);
+ 
+         return orderInfoDAO.findBuyerOrder(orderListStatus, buyerId);
+      }
     @CrossOrigin
     @GetMapping(value={"/OrderlistContent/{orderListId}"})
     public List<OrderInfo> retrieveOrderlistContent(@PathVariable("orderListId") int orderListId) throws SQLException{
         System.out.println("in /OrderlistContent/:orderListStatus/id spring");
-        System.out.println("orderListId:"+orderListId);
-        
+        System.out.println("orderListId:"+orderListId);  
         return orderInfoDAO.findSellerOrderBuyerContent(orderListId);
      }
-
+     
+   @CrossOrigin
+   @GetMapping(value={"/BuyerAllOrderlist/{buyerId}"})
+   public List<OrderInfo> retrieveBuyerOrderlists(@PathVariable("buyerId") String buyerId) throws SQLException{
+         System.out.println("in BuyerAllOrderlist spring");
+         System.out.println("orderListStatus"+buyerId);
+         return orderInfoDAO.findAllBuyerOrder(buyerId);
+      }  
      @CrossOrigin
      @PutMapping(value = "/OrderStatus")
      public void retrieveOrderStatus(@RequestBody OrderList orderList) throws SQLException {

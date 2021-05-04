@@ -2,8 +2,13 @@ package com.example.demo.flex;
 
 import static java.util.Arrays.asList;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
+import com.example.demo.dao.ReplyDAO;
+import com.example.demo.entity.Reply;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.message.FlexMessage;
@@ -22,11 +27,16 @@ import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
 public class QAFlexMessage implements Supplier<FlexMessage> {
-
+    
+     
     @Override
     public FlexMessage get(){
+        
+        
+        
         final Box bodyBlock = createBodyBlock();
         final Box footerBlock = createFooterBlock();
+        
         final Bubble bubble =
                 Bubble.builder()
                       .body(bodyBlock)
@@ -38,6 +48,7 @@ public class QAFlexMessage implements Supplier<FlexMessage> {
     }
 
     private Box createFooterBlock(){
+        
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
         final Button callAction = Button
                 .builder()

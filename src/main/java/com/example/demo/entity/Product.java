@@ -8,7 +8,7 @@ public class Product {
     private int product_stock = 0;
     private String product_photo = "";
     private String product_style = "";
-    private int discount = 0;
+    
 
     public int getProductId(){
         return product_id;
@@ -66,13 +66,7 @@ public class Product {
         this.product_style = product_style;
     }
 
-    public int getDiscount(){
-        return discount;
-    }
-
-    public void setDiscount(int discount){
-        this.discount = discount;
-    }
+    
 
    
 }

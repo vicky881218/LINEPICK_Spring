@@ -5,6 +5,7 @@ package com.example.demo.entity;
         private String buyer_id = "";
         private int product_id = 0;
         private int quantity = 0;
+        private String checked = "false";
 
         public int getCartId(){
             return cart_id;
@@ -37,7 +38,13 @@ package com.example.demo.entity;
         public void setQuantity(int quantity){
             this.quantity=quantity;
         }
+
+        public String getChecked(){
+            return checked;
+        }
+    
+        public void setChecked(String checked){
+            this.checked=checked;
+        }
     
     }
-    
-

@@ -40,6 +40,20 @@ public List<OrderInfo> findSellerOrder(String orderlist_status){
       
     return anOrderList;
   }
+  public List<OrderInfo> findBuyerOrder(String orderlist_status, String buyer_id){
+    List<OrderInfo> anOrderList = jdbcTemplate.query( 
+      "select * from ((orderlist join buyer on orderlist.buyer_id = buyer.buyer_id) join order_item on orderlist.orderlist_id = order_item.orderlist_id) join product on order_item.product_id = product.product_id and orderlist.orderlist_status=? where buyer.buyer_id = ? group by orderlist.orderlist_id", 
+      new OrderInfoMapper(), orderlist_status, buyer_id);
+      
+    return anOrderList;
+  }
+public List<OrderInfo> findAllBuyerOrder(String buyer_id){
+    List<OrderInfo> anOrderList = jdbcTemplate.query( 
+      "select * from ((orderlist join buyer on orderlist.buyer_id = buyer.buyer_id) join order_item on orderlist.orderlist_id = order_item.orderlist_id) join product on order_item.product_id = product.product_id where buyer.buyer_id=? group by orderlist.orderlist_id", 
+      new OrderInfoMapper(), buyer_id);
+      
+    return anOrderList;
+  }
 
   
 

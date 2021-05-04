@@ -36,6 +36,8 @@ public class ReplyDAODB implements ReplyDAO {
    
  return areply;
 }
+
+
 public Reply findOneSeller(int reply_id ) {
   
   try {
@@ -48,9 +50,9 @@ public Reply findOneSeller(int reply_id ) {
  Reply areply = jdbcTemplate.queryForObject( 
    "select * from reply where reply_id = ?", 
    new ReplyMapper(), reply_id);
-   
  return areply;
 }
+
 public List<Reply> findAll() {
    return this.jdbcTemplate.query( "select * from reply", 
     new ReplyMapper());
