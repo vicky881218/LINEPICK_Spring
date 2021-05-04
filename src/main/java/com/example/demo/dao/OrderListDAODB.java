@@ -1,8 +1,11 @@
 package com.example.demo.dao;
 
+import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.OrderList; 
@@ -96,13 +101,30 @@ public OrderList findTheLastRecordOfOrderlist(String buyer_id,int totalLength) {
    new OrderListMapper(), buyer_id,totalLength);
 }
 
-public int insert(OrderList OrderList){ 
-  return jdbcTemplate.update(
-    "insert into orderlist (pay_type, pay_status, orderlist_status, orderlist_payment, order_date, pickmoney_use, buyer_id) values(?,?,?,?,?,?,?)",
-    OrderList.getPayType(), OrderList.getPayStatus(), OrderList.getOrderListStatus(),
-    OrderList.getOrderListPayment(), OrderList.getOrderDate(),OrderList.getPickmoneyUse(), OrderList.getBuyerId());
- }
+public int inserts(OrderList orderList){
+  KeyHolder keyHolder = new GeneratedKeyHolder();
+  String sql = "insert into orderlist (pay_type, pay_status, orderlist_status, orderlist_payment, order_date, pickmoney_use, buyer_id) values(?,?,?,?,?,?,?)";  
+
+  jdbcTemplate.update(connection -> {
+      PreparedStatement ps = connection
+        .prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+        ps.setString(1,orderList.getPayType());
+        ps.setString(2,orderList.getPayStatus());
+        ps.setString(3,orderList.getOrderListStatus());
+        ps.setInt(4,orderList.getOrderListPayment());
+        ps.setString(5,orderList.getOrderDate());
+        ps.setInt(6,orderList.getPickmoneyUse());
+        ps.setString(7,orderList.getBuyerId());
+        return ps;
+      }, keyHolder);
+      Number key = keyHolder.getKey();
+      return key.intValue(); 
+
+}
  
+
+
+
  private static final class OrderListMapper implements RowMapper<OrderList> {
 
      public OrderList mapRow(ResultSet rs, int rowNum) throws SQLException {

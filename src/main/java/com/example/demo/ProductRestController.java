@@ -7,12 +7,16 @@ import java.util.List;
 import com.example.demo.dao.BuyerDAO;
 import com.example.demo.dao.CartDAO;
 import com.example.demo.dao.CartInfoDAO;
+import com.example.demo.dao.OrderItemDAO;
+import com.example.demo.dao.OrderListDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.ProductTypeDAO;
 import com.example.demo.dao.TypeDAO;
 import com.example.demo.entity.Buyer;
 import com.example.demo.entity.Cart;
 import com.example.demo.entity.CartInfo;
+import com.example.demo.entity.OrderItem;
+import com.example.demo.entity.OrderList;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductType;
 import com.example.demo.entity.Type;
@@ -44,6 +48,12 @@ public class ProductRestController {
 
     @Autowired
     private ProductTypeDAO productTypeDAO;
+
+    @Autowired
+    private OrderItemDAO orderItemDAO;
+
+    @Autowired
+    private OrderListDAO orderListDAO;
 
     //Home頁
     @GetMapping(value={"/Home"})
@@ -93,8 +103,15 @@ public class ProductRestController {
         System.out.println("in BuyerInformation Add spring");
         System.out.println(buyer);
         System.out.println("buyer.getBuyerName():"+buyer.getBuyerName());
+        System.out.println("buyer.getBuyerName():"+buyer.getBuyerMail());
         int result = buyerDAO.update(buyer);
         System.out.println("in BuyerInformation result:"+result);
+     }
+
+     @GetMapping(value={"/findProductAll"})
+    public List<Product> retrieveFindProductAll() throws SQLException{
+        System.out.println("in findProductAll spring");
+        return productDAO.findProductAll();  
      }
 
       //checkout更改商品庫存
@@ -144,5 +161,22 @@ public class ProductRestController {
          System.out.println("in Review spring");
          System.out.println("in Review id:"+id);
          return cartInfoDAO.findCheckedCart(id);  
+     }
+
+     //新增訂單到order_item
+     @PutMapping(value = "/OrderItemAdd")
+     public void retrieveOrderItemAdd(@RequestBody OrderItem orderItem) throws SQLException {
+        System.out.println("in OrderItemAdd spring");
+        orderItemDAO.insert(orderItem);
+     }
+
+     //新增訂單到orderlist
+     @PutMapping(value = "/OrderListAdd")
+     public int retrieveOrderListAdd(@RequestBody OrderList orderList) throws SQLException {
+        System.out.println("in OrderListAdd spring");
+        System.out.println(orderList.getOrderListStatus());
+        int result = orderListDAO.inserts(orderList);
+        System.out.println(result);
+        return result;
      }
 }
