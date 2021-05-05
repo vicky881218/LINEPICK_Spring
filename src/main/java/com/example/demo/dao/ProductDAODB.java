@@ -42,6 +42,11 @@ public class ProductDAODB implements ProductDAO{
       new ProductMapper());
  }
 
+ public List<Product> findProductAll() {
+  return this.jdbcTemplate.query( "select * from product", 
+   new ProductMapper());
+}
+
  public List<Product> findOrderProduct(int product_id) {
   return this.jdbcTemplate.query( "select * from product where product_id=?", 
    new ProductMapper(), product_id);
