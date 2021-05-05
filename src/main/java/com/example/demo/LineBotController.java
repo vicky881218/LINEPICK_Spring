@@ -119,7 +119,7 @@ public class LineBotController {
             order.add(usePickmoney);
             this.reply(replyToken, new PaySelectionFlexMessage().get());
             break;
-            case "LinePay": case "匯款": case "貨到付款":
+            case "LinePay": case "信用卡線上付款": case "超商取貨付款":
             String paymentChoice=data[0];
             order.add(paymentChoice);
             System.out.println("here is final");

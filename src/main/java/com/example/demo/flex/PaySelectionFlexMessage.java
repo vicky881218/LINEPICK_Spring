@@ -54,9 +54,9 @@ public class PaySelectionFlexMessage implements Supplier<FlexMessage> {
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
                       .action(PostbackAction.builder()
-                                            .label("匯款")
-                                            .text("匯款")
-                                            .data("匯款")
+                                            .label("信用卡線上付款")
+                                            .text("信用卡線上付款")
+                                            .data("信用卡線上付款")
                                             .build())
                       .build();
         final Separator separators = Separator.builder().build();
@@ -65,9 +65,9 @@ public class PaySelectionFlexMessage implements Supplier<FlexMessage> {
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
                       .action(PostbackAction.builder()
-                                            .label("貨到付款")
-                                            .text("貨到付款")
-                                            .data("貨到付款")
+                                            .label("超商取貨付款")
+                                            .text("超商取貨付款")
+                                            .data("超商取貨付款")
                                             .build())
                       .build();
 

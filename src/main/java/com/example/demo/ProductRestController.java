@@ -96,7 +96,7 @@ public class ProductRestController {
      }
 
      //新增進購物車的資料庫
-     @PostMapping(value = "/CartAdd")
+     @PostMapping(value = "/CartAddAgain")
      public void retrieveBuyerInformationUpdate(@RequestBody Cart cart) throws SQLException {
         System.out.println("in BuyerInformation Add spring");
         System.out.println("cart:"+cart);
