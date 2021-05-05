@@ -38,30 +38,30 @@ public class CartDAODB implements CartDAO{
     private static final class CartMapper implements RowMapper<Cart> {
 
         public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
-          Cart Cart = new Cart();
-          Cart.setCartId(rs.getInt("cart_id"));
-          Cart.setBuyerId(rs.getString("buyer_id"));
-          Cart.setProductId(rs.getInt("product_id"));
-          Cart.setQuantity(rs.getInt("quantity"));
-          Cart.setChecked(rs.getString("checked"));
-          return Cart;
+            Cart Cart = new Cart();
+            Cart.setCartId(rs.getInt("cart_id"));
+            Cart.setBuyerId(rs.getString("buyer_id"));
+            Cart.setProductId(rs.getInt("product_id"));
+            Cart.setQuantity(rs.getInt("quantity"));
+            Cart.setChecked(rs.getString("checked"));
+            return Cart;
         }
     }
    
     public int insert(Cart Cart) throws SQLException{
-      return jdbcTemplate.update(
-        "insert into Cart (cart_id, buyer_id, product_id, quantity,checked) values(?,?,?,?,?)",
-        Cart.getCartId(),Cart.getBuyerId(), Cart.getProductId(),Cart.getQuantity(),Cart.getChecked());
-     }
-     
-     public int update(Cart Cart) {
-      return jdbcTemplate.update(
-        "update Cart set buyer_id=?, product_id=?, quantity=?,checked=? where cart_id =?",
-        Cart.getBuyerId(), Cart.getProductId(),Cart.getQuantity(),Cart.getChecked(),Cart.getCartId());
-     }
+     return jdbcTemplate.update(
+       "insert into Cart (cart_id, buyer_id, product_id, quantity,checked) values(?,?,?,?,?)",
+       Cart.getCartId(),Cart.getBuyerId(), Cart.getProductId(),Cart.getQuantity(),Cart.getChecked());
+    }
     
-     public int delete(int cart_id) {
-      return jdbcTemplate.update(
-        "delete from Cart where cart_id =?", cart_id);
-     }
+    public int update(Cart Cart) {
+     return jdbcTemplate.update(
+       "update Cart set buyer_id=?, product_id=?, quantity=?,checked=? where cart_id =?",
+       Cart.getBuyerId(), Cart.getProductId(),Cart.getQuantity(),Cart.getChecked(),Cart.getCartId());
+    }
+   
+    public int delete(int cart_id) {
+     return jdbcTemplate.update(
+       "delete from Cart where cart_id =?", cart_id);
+    }
 }

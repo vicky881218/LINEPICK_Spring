@@ -24,5 +24,6 @@ public interface OrderListDAO {
     public List<OrderList> findSellerFinishOrder(String orderlist_status);
     public OrderList findSellerOrderContent(int orderlist_id, String orderlist_status);
     public int insert(OrderList OrderList);
+    public int inserts(OrderList OrderList);
     public int update(OrderList OrderList);
 }

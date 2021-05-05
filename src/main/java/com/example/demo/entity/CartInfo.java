@@ -4,14 +4,14 @@ public class CartInfo {
     private int cart_id = 0;
     private String buyer_id = "";
     private int product_id = 0;
-    private int quantity = 0;        
+    private int quantity = 0;     
+    private String checked = "false";   
     private String product_name = "";
     private String product_desc = "";
     private int product_price = 0;
     private int product_stock = 0;
     private String product_photo = "";
     private String product_style = "";
-    private int discount = 0;
 
         public int getCartId(){
             return cart_id;
@@ -35,6 +35,14 @@ public class CartInfo {
     
         public void setQuantity(int quantity){
             this.quantity=quantity;
+        }
+
+        public String getChecked(){
+            return checked;
+        }
+    
+        public void setChecked(String checked){
+            this.checked=checked;
         }
 
     public int getProductId(){
@@ -93,11 +101,4 @@ public class CartInfo {
         this.product_style=product_style;
     }
 
-    public int getDiscount(){
-        return discount;
-    }
-
-    public void setDiscount(int discount){
-        this.discount=discount;
-    }
 }

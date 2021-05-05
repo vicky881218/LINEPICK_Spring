@@ -79,10 +79,19 @@ public JdbcTemplate getJdbcTemplate() {
  }
  
  public int update(Buyer buyer) {
-  return jdbcTemplate.update(
+   int result = 0;
+   try {
+    result = jdbcTemplate.update(
     "update Buyer set buyer_name=?, buyer_phone=?,buyer_mail=?,buyer_address=?, pickpoint=?,pickmoney=? where buyer_id =?",
     buyer.getBuyerName(), buyer.getBuyerPhone(),buyer.getBuyerMail(),
     buyer.getBuyerAddress(), buyer.getPickpoint(), buyer.getPickmoney(),buyer.getBuyerId());
+    
+    jdbcTemplate.getDataSource().getConnection().close();
+  }
+  catch (Exception e){
+    System.out.println(e);
+  }
+    return  result;
  }
 
  public int delete(String buyer_id) {
