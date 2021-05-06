@@ -119,7 +119,7 @@ public class LineBotController {
             order.add(usePickmoney);
             this.reply(replyToken, new PaySelectionFlexMessage().get());
             break;
-            case "LinePay": case "匯款": case "貨到付款":
+            case "LinePay": case "信用卡線上付款": case "超商取貨付款":
             String paymentChoice=data[0];
             order.add(paymentChoice);
             System.out.println("here is final");
@@ -165,25 +165,26 @@ public class LineBotController {
         
         switch (text) {
         case "賴皮客服": {
-            this.reply(replyToken, new QAFlexMessage().get());  
+            int seller_id =1;
+            this.reply(replyToken, new QAFlexMessage(replyDAO, seller_id).get());  
             break;
         }
         case "圖文選單導覽":{
             this.reply(replyToken, new WelcomeInformation().get());
             break;
         }
-        case "如何退貨":{
-            this.replyText(replyToken, "請撥打02-12345678詢問詳細事項");
-            break;
-        }
-        case "下單後過多久出貨":{
-            this.replyText(replyToken, "一般來說7個工作天內出貨");
-            break;
-        }
-        case "以上問題沒有您所想問的嗎":{
-            this.replyText(replyToken, "請直接傳送訊息等待專人為您服務");
-            break;
-        }
+        // case "如何退貨":{
+        //     this.replyText(replyToken, "請撥打02-12345678詢問詳細事項");
+        //     break;
+        // }
+        // case "下單後過多久出貨":{
+        //     this.replyText(replyToken, "一般來說7個工作天內出貨");
+        //     break;
+        // }
+        // case "以上問題沒有您所想問的嗎":{
+        //     this.replyText(replyToken, "請直接傳送訊息等待專人為您服務");
+        //     break;
+        // }
         case "賴皮指數": {
             String buyer_id = event.getSource().getUserId();
             this.reply(replyToken, new PickPointFlexMessage(buyerDAO,buyer_id).get());

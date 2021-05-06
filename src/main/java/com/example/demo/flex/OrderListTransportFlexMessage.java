@@ -36,6 +36,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.OrderList;
 import com.example.demo.entity.Buyer;
 import com.example.demo.entity.OrderItem;
+
 public class OrderListTransportFlexMessage implements Supplier<FlexMessage>{
     private OrderListDAO orderListDAO;
     private OrderList orderList;
