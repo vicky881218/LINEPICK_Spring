@@ -13,5 +13,5 @@ public interface TypeDAO {
     public Type findOne(int type_id);
     public Type findTypeId(String type_name);
     public int update(Type type);
-    public int delete(int type_id);
+    public int delete(String type_name);
 }

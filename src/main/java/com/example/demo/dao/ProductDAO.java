@@ -17,8 +17,9 @@ public interface ProductDAO {
     public List<Product> findOneProductAllStyle(String product_name);
     public List<Product> findOneProductAllSize(String product_style,String product_name);
     public Product findOne(int product_id);
-    public Product findOrderInformationProductId(String product_name, String product_style);
+    public Product findOrderInformationProductId(String product_style);
     public Product findThisProductPrice(String product_name,String product_style);
     public int update(Product product);
     public int delete(String product_id);
+    public int deleteProductStyle(String product_style);
 }

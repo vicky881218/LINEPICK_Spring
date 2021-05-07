@@ -30,10 +30,16 @@ public class ProductDAODB implements ProductDAO{
     new ProductMapper(), product_id);
   return aProduct;
  }
- public Product findOrderInformationProductId(String product_name, String product_style) {
+//  public Product findOrderInformationProductId(String product_name, String product_style) {
+//   Product aProduct = jdbcTemplate.queryForObject( 
+//    "select * from product where product_name = ? and product_style=?", 
+//    new ProductMapper(), product_name, product_style);
+//  return aProduct;
+// }
+public Product findOrderInformationProductId(String product_style) {
   Product aProduct = jdbcTemplate.queryForObject( 
-   "select * from product where product_name = ? and product_style=?", 
-   new ProductMapper(), product_name, product_style);
+   "select * from product where product_style=?", 
+   new ProductMapper(), product_style);
  return aProduct;
 }
 
@@ -89,22 +95,27 @@ public List<Product> findOneByName(String product_name) {
      }
  }
 
- public int insert(Product Product) throws SQLException{
+ public int insert(Product product) throws SQLException{
   return jdbcTemplate.update(
-    "insert into product (product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style) values(?,?,?,?,?,?,?)",
-    Product.getProductId(),Product.getProductName(), Product.getProductDesc(),Product.getProductPrice(),
-    Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle());
+    "insert into product (product_id,product_name,product_desc,product_price,product_stock,product_photo,product_style) values(?,?,?,?,?,?,?)",
+    product.getProductId(),product.getProductName(), product.getProductDesc(),product.getProductPrice(),
+    product.getProductStock(),product.getProductPhoto(), product.getProductStyle());
  }
- 
- public int update(Product Product) {
+
+ public int update(Product product) {
   return jdbcTemplate.update(
-    "update product set product_name=?, product_desc=?, product_price=?, product_stock=?, product_photo=?, product_style=?where product_id =?",
-    Product.getProductName(), Product.getProductDesc(),Product.getProductPrice(),
-    Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle(), Product.getProductId());
+    "update product set product_name=?, product_desc=?, product_price=?, product_stock=?, product_photo=?, product_style=? where product_id=?",
+    product.getProductName(), product.getProductDesc(),product.getProductPrice(),
+    product.getProductStock(),product.getProductPhoto(), product.getProductStyle(), product.getProductId());
  }
 
  public int delete(String product_id) {
   return jdbcTemplate.update(
     "delete from product where product_id =?", product_id);
+ }
+
+ public int deleteProductStyle(String product_style) {
+  return jdbcTemplate.update(
+    "delete from product where product_style =?", product_style);
  }
 }

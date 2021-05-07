@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 public class Product {
-    private int product_id = 1;
+    private int product_id = 0;
     private String product_name = "";
     private String product_desc = "";
     private int product_price = 0;
