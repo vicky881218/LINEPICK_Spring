@@ -186,4 +186,38 @@ public class ProductRestController {
         System.out.println(result);
         return result;
      }
+
+     //新增商品
+     @PutMapping(value = "/ProductAdd")
+     public int retrieveProductAdd(@RequestBody Product product) throws SQLException {
+        System.out.println("in ProductAdd spring");
+        System.out.println("product:"+product);
+        int result =productDAO.insertToType(product);
+        System.out.println("產生key");
+        System.out.println(result);
+        return result;
+     }
+
+     //新增商品完商品去produtc_type新增
+     @PutMapping(value = "/ProductTypeAdd")
+     public int retrieveProductTypeAdd(@RequestBody ProductType productType) throws SQLException {
+        System.out.println("in ProductTypeAdd spring");
+        return productTypeDAO.insert(productType);
+     }
+
+     // 新增進Type
+   @PostMapping(value = "/TypeAdd")
+   public void retrieveTypeUpdate(@RequestBody Type type) throws SQLException {
+      System.out.println("in TypeAdd spring");
+      System.out.println("type:" + type);
+      typeDAO.insert(type);
+   }
+
+   // 刪除多的Type
+   @DeleteMapping(value = "/TypeDelete/{type_name}")
+   public void retrieveTypeDelete(@PathVariable("type_name") String type_name) throws SQLException {
+      System.out.println("in TypeDelete spring");
+      System.out.println("type:" + type_name);
+      typeDAO.delete(type_name);
+   }
 }

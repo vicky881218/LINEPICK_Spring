@@ -1,9 +1,9 @@
 package com.example.demo.entity;
 
 public class ProductType {
-    private int product_id = 1;
+    private int product_id = 0;
     private int type_id = 0;
-    private int product_type_id = 1;
+    private int product_type_id = 0;
 
 
     public int getProductId(){

@@ -65,7 +65,7 @@ public class ProductTypeDAODB implements ProductTypeDAO {
    
     public int insert(ProductType ProductType) throws SQLException{
      return jdbcTemplate.update(
-       "insert into ProductType (product_type_id,type_id, product_id) values(?,?,?)",
+       "insert into product_type (product_type_id,type_id, product_id) values(?,?,?)",
        ProductType.getProductTypeId(),ProductType.getTypeId(), ProductType.getProductId());
     }
     

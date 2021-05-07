@@ -1,8 +1,10 @@
 package com.example.demo.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Product; 
@@ -100,6 +104,24 @@ public List<Product> findOneByName(String product_name) {
     "insert into product (product_id,product_name, product_desc,product_price,product_stock,product_photo,product_style) values(?,?,?,?,?,?,?)",
     Product.getProductId(),Product.getProductName(), Product.getProductDesc(),Product.getProductPrice(),
     Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle());
+ }
+
+ public int insertToType(Product product){
+  KeyHolder keyHolder = new GeneratedKeyHolder();
+  String sql = "insert into product (product_name, product_desc,product_price,product_stock,product_photo,product_style) values(?,?,?,?,?,?)";
+  jdbcTemplate.update(connection -> {
+    PreparedStatement ps = connection
+      .prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+      ps.setString(1,product.getProductName());
+      ps.setString(2,product.getProductDesc());
+      ps.setInt(3,product.getProductPrice());
+      ps.setInt(4,product.getProductStock());
+      ps.setString(5,product.getProductPhoto());
+      ps.setString(6,product.getProductStyle());
+      return ps;
+    }, keyHolder);
+    Number key = keyHolder.getKey();
+    return key.intValue(); 
  }
  
  public int update(Product Product) {

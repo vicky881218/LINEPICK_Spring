@@ -22,4 +22,5 @@ public interface ProductDAO {
     public Product findThisProductPrice(String product_name,String product_style);
     public int update(Product product);
     public int delete(String product_id);
+    public int insertToType(Product Product);
 }
