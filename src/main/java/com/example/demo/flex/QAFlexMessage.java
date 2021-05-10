@@ -81,7 +81,7 @@ public class QAFlexMessage implements Supplier<FlexMessage> {
                .build());
      }
      final Carousel carousel =Carousel.builder().contents(bubble).build();        
-        return new FlexMessage("ALT", carousel);
+        return new FlexMessage("賴皮客服", carousel);
     }
 
     private Box createFooterBlock(Reply x){
