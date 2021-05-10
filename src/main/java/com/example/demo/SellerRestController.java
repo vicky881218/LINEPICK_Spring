@@ -23,11 +23,28 @@ public class SellerRestController {
     private SellerDAO sellerDAO;
 
     //賣家資訊
-    @GetMapping(value={"/SellerSet/{id}"})
-    public Seller retrieveOneBuyer(@PathVariable int id) throws SQLException{
-        System.out.println("in SellerSet spring");
-        return sellerDAO.findOne(id);  
-     }
+   //  @GetMapping(value={"/SellerSet/{id}"})
+   //  public Seller retrieveOneBuyer(@PathVariable int id) throws SQLException{
+   //      System.out.println("in SellerSet spring");
+   //      return sellerDAO.findOne(id);  
+   //   }
+
+       //賣家資訊
+    @CrossOrigin
+        @GetMapping(value={"/SellerSet/{id}"})
+        public Seller retrieveOneBuyer(@PathVariable int id) throws SQLException{
+            System.out.println("in SellerSet spring");
+            return sellerDAO.findOne(id);  
+         }
+    
+         //更改賣家資料庫
+         @PutMapping(value = "/SellerEdit")
+         public void retrieveBuyerInformationUpdate(@RequestBody Seller seller) throws SQLException {
+            System.out.println("in SellerEdit spring");
+            System.out.println("seller:"+seller);
+            sellerDAO.update(seller);
+         }
+
      @CrossOrigin
      @PostMapping(value = "/SellerSignUp")
      public void retrieveQAadd(@RequestBody Seller seller) throws SQLException {
@@ -48,4 +65,4 @@ public class SellerRestController {
      }
 }
      
-}
+

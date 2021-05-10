@@ -34,7 +34,14 @@ public class ProductDAODB implements ProductDAO{
     new ProductMapper(), product_id);
   return aProduct;
  }
- public Product findOrderInformationProductId(String product_name, String product_style) {
+ public Product findOrderInformationProductId2(String product_style) {
+  Product aProduct = jdbcTemplate.queryForObject( 
+   "select * from product where product_style=?", 
+   new ProductMapper(), product_style);
+ return aProduct;
+}
+
+public Product findOrderInformationProductId(String product_name, String product_style) {
   Product aProduct = jdbcTemplate.queryForObject( 
    "select * from product where product_name = ? and product_style=?", 
    new ProductMapper(), product_name, product_style);
@@ -61,8 +68,8 @@ public List<Product> findOneByName(String product_name) {
    new ProductMapper(), product_name);
  }
  
-  public List<Product> findOneTypeAllProduct(int product_id) {
-   return this.jdbcTemplate.query( "select * from product where product_id=? group by product_name", 
+  public Product findOneTypeAllProduct(int product_id) {
+   return this.jdbcTemplate.queryForObject( "select * from product where product_id=? group by product_name", 
     new ProductMapper(),product_id);
  }
  
@@ -70,6 +77,11 @@ public List<Product> findOneByName(String product_name) {
    return this.jdbcTemplate.query( "select * from product where product_name=? group by product_style ", 
     new ProductMapper(),product_name);
  }
+
+ public Product findOneTypeOneProduct(String product_name) {
+  return this.jdbcTemplate.queryForObject( "select * from product where product_name=?", 
+   new ProductMapper(),product_name);
+}
  
  public List<Product> findOneProductAllSize(String product_style,String product_name) {
    return this.jdbcTemplate.query( "select * from product where product_style=? and product_name=?", 
