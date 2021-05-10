@@ -70,16 +70,34 @@ public class ProductRestController {
      }
      //分類後商品
     @GetMapping(value={"/SecondType/{typeId}"})
-    public List<Product> retrieveTypeProduct(@PathVariable int typeId) throws SQLException{
-        System.out.println("in /TypeProduct/:type spring");
+    public List<ProductType> retrieveTypeProduct(@PathVariable int typeId) throws SQLException{
+        System.out.println("in /SecondType/{typeId} spring");
         System.out.println("typeId:"+typeId);
         List<ProductType> All = productTypeDAO.findOneTypeAllProduct(typeId);
-        List<Product> oneTypeAll = new ArrayList<>(); 
-        for(ProductType z : All){
-           int product_id= z.getProductId();
-           oneTypeAll= productDAO.findOneTypeAllProduct(product_id);
-        }
-        return oneTypeAll;  
+      //   List<String> nameList = new ArrayList<String>();
+      //   List<Product> thisProduct = new ArrayList<>();
+
+      //   for(ProductType z : All){
+      //      int product_id= z.getProductId();
+      //      System.out.println("product_id");
+      //      System.out.println(product_id);
+      //      Product oneTypeAll = productDAO.findOneTypeAllProduct(product_id);
+      //      String productName = oneTypeAll.getProductName();
+      //      boolean bool;
+      //       if( bool = nameList.contains(productName)){
+      //          System.out.println("已存在");
+      //         }else{
+      //          nameList.add(productName);
+      //         }
+      //      }
+      //    for(var i=0;i<nameList.size();i++){
+      //       System.out.println("product_name");
+      //      System.out.println(nameList.get(i));
+      //       String product_name= nameList.get(i);
+      //       Product findIt = findOneTypeOneProduct(product_name);
+      //       thisProduct.add(findIt);
+      //    }
+        return All;  
      }
      //單一商品不同款式
      @GetMapping(value={"/ProductsInfo/{name}"})
@@ -89,6 +107,21 @@ public class ProductRestController {
       return productDAO.findOneProductAllStyle(name);  
      }
 
+      // 單一款式的照片、價格、庫存
+   @GetMapping(value = { "/StylesInfo/{product_style}" })
+   public Product retrieveOneStyleAll(@PathVariable("product_style") String product_style) throws SQLException {
+      System.out.println("in /StylesInfo/{product_style} spring");
+      System.out.println("{product_style} " + product_style);
+      return productDAO.findOrderInformationProductId2(product_style);
+   }
+
+   // 更改商品資料庫
+   @PutMapping(value = "/ProductEdit")
+   public void retrieveBuyerInformationUpdate(@RequestBody Product product) throws SQLException {
+      System.out.println("in ProductEdit spring");
+      System.out.println("product:" + product.getProductDesc());
+      productDAO.update(product);
+   }
      //買家資訊
      @GetMapping(value={"/Checkout/{id}"})
     public Buyer retrieveOneBuyer(@PathVariable("id") String id) throws SQLException{
@@ -186,4 +219,38 @@ public class ProductRestController {
         System.out.println(result);
         return result;
      }
+
+     //新增商品
+     @PutMapping(value = "/ProductAdd")
+     public int retrieveProductAdd(@RequestBody Product product) throws SQLException {
+        System.out.println("in ProductAdd spring");
+        System.out.println("product:"+product);
+        int result =productDAO.insertToType(product);
+        System.out.println("產生key");
+        System.out.println(result);
+        return result;
+     }
+
+     //新增商品完商品去produtc_type新增
+     @PutMapping(value = "/ProductTypeAdd")
+     public int retrieveProductTypeAdd(@RequestBody ProductType productType) throws SQLException {
+        System.out.println("in ProductTypeAdd spring");
+        return productTypeDAO.insert(productType);
+     }
+
+     // 新增進Type
+   @PostMapping(value = "/TypeAdd")
+   public void retrieveTypeUpdate(@RequestBody Type type) throws SQLException {
+      System.out.println("in TypeAdd spring");
+      System.out.println("type:" + type);
+      typeDAO.insert(type);
+   }
+
+   // 刪除多的Type
+   @DeleteMapping(value = "/TypeDelete/{type_name}")
+   public void retrieveTypeDelete(@PathVariable("type_name") String type_name) throws SQLException {
+      System.out.println("in TypeDelete spring");
+      System.out.println("type:" + type_name);
+      typeDAO.delete(type_name);
+   }
 }

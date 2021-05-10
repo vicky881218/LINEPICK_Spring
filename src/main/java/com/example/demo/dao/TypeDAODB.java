@@ -70,7 +70,7 @@ public class TypeDAODB implements TypeDAO {
 
     public int insert(Type type) throws SQLException {
         return jdbcTemplate.update(
-                "insert into type (type_id,type_name,seller_id) values(?,?,?,?,?,?,?)",
+                "insert into type (type_id,type_name,seller_id) values(?,?,?)",
                 type.getTypeId(), type.getTypeName(), type.getSellerId());
     }
 
@@ -80,8 +80,8 @@ public class TypeDAODB implements TypeDAO {
                 type.getTypeId(), type.getTypeName(), type.getSellerId());
     }
 
-    public int delete(int type_id) {
-        return jdbcTemplate.update("delete from type where type_id =?", type_id);
+    public int delete(String type_name) {
+        return jdbcTemplate.update("delete from type where type_name =?", type_name);
     }
 
 }

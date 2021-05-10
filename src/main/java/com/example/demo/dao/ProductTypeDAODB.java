@@ -39,7 +39,7 @@ public class ProductTypeDAODB implements ProductTypeDAO {
     //從typeName找對應的所有商品(分類)
     public List<ProductType> findOneTypeAllProduct(int type_id) {
         return this.jdbcTemplate.query(
-                "Select * FROM type, product_type,product where type.type_id = product_type.type_id and product_type.product_id = product.product_id and type.type_id=?",
+                "Select * FROM type, product_type,product where type.type_id = product_type.type_id and product_type.product_id = product.product_id and type.type_id=? group by product.product_name",
                 new ProductTypeMapper(),type_id);
     }
     /*---------------------------------------------------------------------------------------------*/
@@ -55,6 +55,14 @@ public class ProductTypeDAODB implements ProductTypeDAO {
 
         public ProductType mapRow(ResultSet rs, int rowNum) throws SQLException {
             ProductType ProductType = new ProductType();
+            ProductType.setProductName(rs.getString("product_name"));
+         ProductType.setProductDesc(rs.getString("product_desc"));
+         ProductType.setProductPrice(rs.getInt("product_price"));
+         ProductType.setProductStock(rs.getInt("product_stock"));
+         ProductType.setProductPhoto(rs.getString("product_photo"));
+         ProductType.setProductStyle(rs.getString("product_style"));
+         ProductType.setTypeName(rs.getString("type_name"));
+         ProductType.setSellerId(rs.getInt("seller_id"));
             ProductType.setProductTypeId(rs.getInt("product_type_id"));
             ProductType.setTypeId(rs.getInt("type_id"));
             ProductType.setProductId(rs.getInt("product_id"));
@@ -65,7 +73,7 @@ public class ProductTypeDAODB implements ProductTypeDAO {
    
     public int insert(ProductType ProductType) throws SQLException{
      return jdbcTemplate.update(
-       "insert into ProductType (product_type_id,type_id, product_id) values(?,?,?)",
+       "insert into product_type (product_type_id,type_id, product_id) values(?,?,?)",
        ProductType.getProductTypeId(),ProductType.getTypeId(), ProductType.getProductId());
     }
     
