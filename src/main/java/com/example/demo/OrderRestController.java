@@ -71,6 +71,15 @@ public class OrderRestController {
         orderlistDAO.update(orderList);
      }
 
+
+     @PostMapping(value = "/OrderStatusInReact")
+     public void retrieveOrderStatusInReact(@RequestBody OrderList orderList) throws SQLException {
+        System.out.println("in orderlist Add spring");
+        System.out.println(orderList);
+        System.out.println("STATUS:"+orderList.getOrderListStatus());
+        orderlistDAO.update(orderList);
+     }
+
    @CrossOrigin
    @GetMapping(value={"/Reply"})
    public List<Reply> retrieveAllReplyQA() throws SQLException{
