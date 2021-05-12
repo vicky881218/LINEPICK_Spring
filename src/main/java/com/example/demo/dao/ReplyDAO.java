@@ -16,5 +16,5 @@ public interface ReplyDAO {
     public int insert(Reply Reply) throws SQLException;
     public int update(Reply Reply);
     public Reply findOneSeller(int reply_id );
-
+    public int delete(int reply_id);
 }
