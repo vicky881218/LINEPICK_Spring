@@ -41,6 +41,7 @@ public class BuyerInformation implements Supplier<TextMessage>{
         final Text text1 = Text.builder().text("userId:").text(buyer.getBuyerId()).build();
         //System.out.println(); 
         return new TextMessage(buyer.getBuyerName()+"，註冊成功~");
+        // return new TextMessage("瑄瑄，註冊成功~");
     }
 
 

@@ -93,7 +93,7 @@ public class LineBotController {
         String replyToken= event.getReplyToken();
         
         switch (data[data.length-1]){
-            case "黑巧克力(24入)": case"白巧克力(24入)": case"雙層玻璃杯": case"不鏽鋼胖胖杯": case "陶瓷變色馬克杯": case "綠茶洗面乳80ml": case "火山泥洗面乳70ml":
+            case "黑巧克力": case"白巧克力": case"雙層玻璃杯": case"不鏽鋼胖胖杯": case "陶瓷變色馬克杯": case "綠茶洗面乳80ml": case "火山泥洗面乳70ml": case "毛孔緊緻亮膚140ml": case "控油款":
             String product_name=data[0];
             String quantity = data[1];
             String product_style = data[2];
@@ -273,12 +273,15 @@ public class LineBotController {
                     catch (DuplicateKeyException e){
                         System.out.println("exists");
                         this.replyText(replyToken,buyer_name+"，您已經註冊過囉!");
+                        // this.replyText(replyToken,"瑄瑄，註冊成功~");
                     }
                     catch (SQLException e){
                         System.out.println(e);
+                        // this.replyText(replyToken,"瑄瑄，註冊成功~");
                     }
                     catch (Exception e){
                         System.out.println(e);
+                        // this.replyText(replyToken,"瑄瑄，註冊成功~");
                     }
 
                 });
