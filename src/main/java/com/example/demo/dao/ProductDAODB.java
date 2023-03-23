@@ -143,8 +143,14 @@ public List<Product> findOneByName(String product_name) {
     Product.getProductStock(),Product.getProductPhoto(), Product.getProductStyle(), Product.getProductId());
  }
 
- public int delete(String product_id) {
+ public int delete(String product_name) {
   return jdbcTemplate.update(
-    "delete from product where product_id =?", product_id);
+    "delete from product where product_name =?", product_name);
  }
+
+ public int deleteProductStyle(String product_style) {
+  return jdbcTemplate.update(
+    "delete from product where product_style =?", product_style);
+ }
+
 }

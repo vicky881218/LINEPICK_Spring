@@ -83,7 +83,7 @@ public class OrderRestController {
    @CrossOrigin
    @GetMapping(value={"/Reply"})
    public List<Reply> retrieveAllReplyQA() throws SQLException{
-       System.out.println("in Home spring");
+       System.out.println("in Reply spring");
        return replyDAO.findAll();  
     }
 
@@ -94,6 +94,14 @@ public class OrderRestController {
         System.out.println("replyId:"+replyId);
         return replyDAO.findOneSeller(replyId);
      }
+
+   @CrossOrigin
+   @DeleteMapping(value = "/ReplyDelete/{replyId}")
+   public void retrieveReplyDelete(@PathVariable("replyId") int replyId) throws SQLException {
+      System.out.println("in ReplyDelete spring");
+      System.out.println("replyId:" + replyId);
+      replyDAO.delete(replyId);
+   }
 
     @CrossOrigin
      @PostMapping(value = "/QAadd")
@@ -111,5 +119,13 @@ public class OrderRestController {
         System.out.println(reply);
         System.out.println("STATUS:"+reply.getReplyQuestion());
         replyDAO.update(reply);
+     }
+
+     @PostMapping(value = "/OrderStatusInReact")
+     public void retrieveOrderStatusInReact(@RequestBody OrderList orderList) throws SQLException {
+        System.out.println("in orderlist Add spring");
+        System.out.println(orderList);
+        System.out.println("STATUS:"+orderList.getOrderListStatus());
+        orderlistDAO.update(orderList);
      }
 }

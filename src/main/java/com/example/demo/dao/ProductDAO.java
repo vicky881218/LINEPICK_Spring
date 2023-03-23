@@ -21,7 +21,8 @@ public interface ProductDAO {
     public Product findOrderInformationProductId(String product_name, String product_style);
     public Product findThisProductPrice(String product_name,String product_style);
     public int update(Product product);
-    public int delete(String product_id);
+    public int delete(String product_name);
+    public int deleteProductStyle(String product_style);
     public int insertToType(Product Product);
     public Product findOrderInformationProductId2(String product_style);
     public Product findOneTypeOneProduct(String product_name);
