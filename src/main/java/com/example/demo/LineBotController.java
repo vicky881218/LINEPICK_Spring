@@ -273,12 +273,15 @@ public class LineBotController {
                     catch (DuplicateKeyException e){
                         System.out.println("exists");
                         this.replyText(replyToken,buyer_name+"，您已經註冊過囉!");
+                        // this.replyText(replyToken,"瑄瑄，註冊成功~");
                     }
                     catch (SQLException e){
                         System.out.println(e);
+                        // this.replyText(replyToken,"瑄瑄，註冊成功~");
                     }
                     catch (Exception e){
                         System.out.println(e);
+                        // this.replyText(replyToken,"瑄瑄，註冊成功~");
                     }
 
                 });
